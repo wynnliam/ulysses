@@ -1,0 +1,47 @@
+Liam Wynn, 12/21/2017, Ulysses
+
+Ulysses will be a long term experiment in world building.
+This could be a game in the future. For now, it will be
+a glorified walking simulator. The features I add to it
+are distilled from A Clash of Colors.
+
+ACOC will still exist spirtually from Ulysses. It's that
+ACOC was so feature-bloated that I had to kill it. Instead,
+I plan on adding features and developing it overtime.
+
+My goal is to have all the features implemented relatively
+quickly. Further, I'd like to make sure everything is
+well-designed and maintained.
+
+-----------------------------------------------------------
+Addendum 12/21/2017 - Basic World Generation
+
+The first thing I plan on developing is a very simplistic
+terrain generator that is loosely based on plate tectonics
+and orogeny.
+
+Briefly, plate tectonics is a theory that the world is carved
+up into a series of giant slabs that move and collide. These
+collisions result in the mountains, volcanoes, continents, etc.
+
+More specifically, it's not the "world" as a whole, but the outter
+most layer, which is apart of the Lithosphere. We say that this
+thin layer is "crust".
+
+There are two types of crust: oceanic and continental. As the names
+would imply, oceanic crust is under the oceans, and continental is
+above it. All land-based life lives on continental crust.
+
+Actually, technically speaking, some continental crust is underwater.
+What differentiates continental crust from oceanic is generally its
+chemical composition. Further, generally speaking, continental crust
+is older and thicker than oceanic crust (among other things). In fact,
+the youngest continental crust is roughly 25 million years older than
+oceanic crust.
+
+We use these properties to make our crust. It is very much a far-cry
+from the actual science, but it is still loosely related. In essence,
+we generate an age map and a thickness map to determine what is land
+and ocean.
+
+TODO: Finish design documents
