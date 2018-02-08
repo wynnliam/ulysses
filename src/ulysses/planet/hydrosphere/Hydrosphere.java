@@ -27,6 +27,8 @@ package ulysses.planet;
 // Used to store specific hydrosphere data
 // and to compute the Precipitation Map.
 import ulysses.planet.utilities.PlanetMap;
+// Used to find the river of associated points.
+import java.awt.Point;
 
 public class Hydrosphere
 {
@@ -134,6 +136,40 @@ public class Hydrosphere
 			return;
 
 		this.rivers[index] = val;
+	}
+
+	/*
+		Returns the index of the river that contains a given point.
+		This operation will return -1 (denoting failure) if no river
+		has said point, said point is null, or the river array is null.
+
+		ARGUMENTS:
+			point - the point we want the river of.
+
+		RETURNS:
+			the index of the river that contains point OR -1 if point
+			or the rivers array is null.
+	*/
+	public int getRiverOf(Point point)
+	{
+		if(point == null || this.rivers == null)
+			return -1;
+
+		// What we will return. Assume the point
+		// is not associated with any river.
+		int result = -1;
+
+		for(int i = 0; i < this.rivers.length; ++i)
+		{
+			// Found the river. Update result and terminate the loop.
+			if(this.rivers[i].containsPoint(point))
+			{
+				result = i;
+				break;
+			}
+		}
+
+		return result;
 	}
 
 	public PlanetMap getPrecipitationMap()

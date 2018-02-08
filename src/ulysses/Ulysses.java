@@ -34,6 +34,24 @@ class Ulysses
 		//SwingUtilities.invokeLater(ulyssesDriver);
 
 		Hydrosphere dummyHydro = new Hydrosphere(128, 128);
+		River a, b;
+
+		a = new River();
+		a.insertPoint(new Point(1, 2));
+		a.insertPoint(new Point(1, 3));
+
+		b = new River();
+		b.insertPoint(new Point(4, 8));
+		b.insertPoint(new Point(3, 8));
+
+		dummyHydro.setNumRivers(2);
+		dummyHydro.setRiver(0, a);
+		dummyHydro.setRiver(1, b);
+
+		System.out.println(dummyHydro.getRiverOf(new Point(4, 8)));
+		System.out.println(dummyHydro.getRiverOf(new Point(1, 3)));
+		System.out.println(dummyHydro.getRiverOf(new Point(5, 7)));
+		System.out.println(dummyHydro.getRiverOf(null));
 	}
 }
 
