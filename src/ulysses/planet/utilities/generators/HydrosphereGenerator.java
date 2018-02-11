@@ -140,7 +140,7 @@ public class HydrosphereGenerator
 		cloudFreqMap = this.cloudFreqMapGenerator.generateMap();
 		riverSourceMap = computeRiverSourceMap(cloudFreqMap);
 
-		// TODO: Use river source map + height map to create rivers.
+		generateRivers(result, heightMap, riverSourceMap);
 
 		result.setCloudFreqMap(cloudFreqMap);
 
@@ -162,5 +162,25 @@ public class HydrosphereGenerator
 		riverSourceMap.normalize();
 
 		return riverSourceMap;
+	}
+
+	/*
+		Generates the rivers for the hydrosphere. This operation will fail if at least
+		of the following is true:
+
+		1. hydro, heightmap, or riverSourceMap are null.
+		2. Number of rivers is 0.
+
+		ARGUMENTS:
+			hydro - where to store resulting rivers.
+			heightmap - used to choose points for building rivers.
+			riverSourceMap - used to choose the initial points for the river.
+	*/
+	private void generateRivers(Hydrosphere hydro, PlanetMap heightmap, PlanetMap riverSourceMap)
+	{
+		if(hydro == null || heightmap == null || riverSourceMap == null)
+			return;
+		if(numRivers < 1)
+			return;
 	}
 }
