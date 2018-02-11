@@ -25,8 +25,13 @@ package ulysses.planet.utilities.generators;
 
 // Used in generateHydrosphere method.
 import ulysses.planet.Hydrosphere;
+import ulysses.planet.River;
 // Used to store the height map.
 import ulysses.planet.utilities.PlanetMap;
+// Used in generating rivers.
+import java.awt.Point;
+// Used to choose the origins of Rivers.
+import java.awt.geom.Point2D;
 
 public class HydrosphereGenerator
 {
@@ -182,5 +187,29 @@ public class HydrosphereGenerator
 			return;
 		if(numRivers < 1)
 			return;
+
+		// Easy access to the source points for rivers.
+		Point2D.Float[] sources = riverSourceMap.getSortedPoints();
+		// The next river to add.
+		River river;
+		// Easy access sources array.
+		int index;
+		// Used to conveniently access our source point.
+		Point source;
+
+		for(int i = 0; i < this.numRivers; ++i)
+		{
+			index = (sources.length - 1) - i;
+			// A 2D point to 1D is i = y * width + x.
+			// The opposite is x = i % width, y = i / width.
+			source = new Point((int)sources[index].getX() % this.width,
+							   (int)sources[index].getX() / this.width);
+
+			river = new River();
+			// TODO: Use river generating algorithm.
+			river.insertPoint(source);
+
+			hydro.setRiver(i, river);
+		}
 	}
 }
