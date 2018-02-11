@@ -192,6 +192,25 @@ public class PlanetMap
 	}
 
 	/*
+		Returns a list of the data in a set of 2D points where x is the position
+		and y is the map value. This data is sorted from smallest to largest.
+	*/
+	public Point2D.Float[] getSortedPoints()
+	{
+		int len = this.width * this.height;
+		Point2D.Float[] temp = new Point2D.Float[len];
+
+		// Add the points to the array to sort.
+		for(int i = 0; i < len; ++i)
+			temp[i] = new Point2D.Float(i, this.data[i]);
+
+		// Now sort the temp points and find the final values.
+		sortPoints(temp, 0, len - 1);
+
+		return temp;
+	}
+
+	/*
 		A simple implementation of quicksort. Divides a set of points
 		into two parts based on a partitioning scheme, and then calls the
 		function again on those two parts. When we sort, we sort based

@@ -188,7 +188,7 @@ public class Lithosphere
 		float min, max;
 		int len = this.width * this.height;
 		// Sort these to compute the mountain, land, and ocean values.
-		Point2D.Float[] temp = new Point2D.Float[len];
+		Point2D.Float[] temp;
 		int lndLimit, seaLimit;
 		// The maximum elevation that is still considered submerged.
 		// Think of this as the minimum depth of the sea.
@@ -202,12 +202,7 @@ public class Lithosphere
 		// Normalize the data.
 		height.normalize();
 
-		// Add the points to the array to sort.
-		for(int i = 0; i < len; ++i)
-			temp[i] = new Point2D.Float(i, height.getData(i));
-
-		// Now sort the temp points and find the final values.
-		sortPoints(temp, 0, len - 1);
+		temp = height.getSortedPoints();
 
 		// If it is negative, make it 0.
 		maxSea = maxSea < 0.0f ? 0.0f : maxSea;
