@@ -32,6 +32,10 @@ import ulysses.planet.utilities.PlanetMap;
 import java.awt.Point;
 // Used to choose the origins of Rivers.
 import java.awt.geom.Point2D;
+// Used in river generation.
+import java.util.Stack;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 public class HydrosphereGenerator
 {
@@ -207,10 +211,109 @@ public class HydrosphereGenerator
 							   (int)sources[index].getX() / this.width);
 
 			river = new River();
-			// TODO: Use river generating algorithm.
-			river.insertPoint(source);
+			buildRiver(river, source, heightmap);
 
 			hydro.setRiver(i, river);
 		}
+	}
+
+	/*
+		Builds a single river. We store the result in river. The river begins at
+		source. We use heightmap to choose points in the river. We use a depth first
+		search algorithm that goes until ocean is found. TODO: Finish documentation
+	*/
+	private void buildRiver(River river, Point source, PlanetMap heightmap)
+	{
+		// Stores unvisited points.
+		Stack<Point> stack = new Stack<Point>();
+		// Stores parent relationship. Used to build rivers.
+		HashMap<Point, Point> parent = new HashMap<Point, Point>();	
+		// Marks points as visited.
+		boolean[] visited = new boolean[this.width * this.height];
+		// Manages our current point.
+		Point curr;
+		// Manages the neighbors of curr.
+		ArrayList<Point> neighbors;
+		// The point to visit next.
+		Point next;
+
+		stack.push(source);
+		visited[(int)source.getY() * this.width + (int)source.getX()] = true;
+
+		while(!stack.empty())
+		{
+			curr = stack.pop();
+
+			// TODO: Check that point is apart of another river!
+			// Found water!
+			if(heightmap.getData((int)curr.getX(), (int)curr.getY()) <= 0.37f)
+			{
+				while(!curr.equals(source))
+				{
+					river.insertPoint(curr);
+					curr = (Point)parent.get(curr);
+				}
+
+				return;
+			}
+
+			neighbors = getNeighbors(curr, visited);
+			if(neighbors.isEmpty())
+				continue;
+			else
+			{
+				next = chooseNeighbor(neighbors, heightmap);
+				stack.push(next);
+				visited[(int)next.getY() * this.width + (int)next.getX()] = true;
+				parent.put(next, curr);
+			}
+		}
+	}
+
+	private ArrayList<Point> getNeighbors(Point curr, boolean[] visited)
+	{
+		ArrayList<Point> result = new ArrayList<Point>();
+		int x, y;
+		int l, r, u, d;
+
+		x = (int)curr.getX();
+		y = (int)curr.getY();
+
+		l = (x - 1 % this.width + this.width) % this.width;
+		r = (x + 1 % this.width + this.width) % this.width;
+		u = (y - 1 % this.height + this.height) % this.height;
+		d = (y + 1 % this.height + this.height) % this.height;
+
+		if(!visited[y * this.width + l])
+			result.add(new Point(l, y));
+		if(!visited[y * this.width + r])
+			result.add(new Point(r, y));
+		if(!visited[u * this.width + x])
+			result.add(new Point(x, u));
+		if(!visited[d * this.width + x])
+			result.add(new Point(x, d));
+
+		return result;
+	}
+
+	private Point chooseNeighbor(ArrayList<Point> neighbors, PlanetMap heightmap)
+	{
+		int result = 0;
+		Point p = (Point)neighbors.get(0);
+		float val = heightmap.getData((int)p.getX(), (int)p.getY());
+		float bestVal = val;
+
+		for(int i = 1; i < neighbors.size(); ++i)
+		{
+			p = (Point)neighbors.get(i);
+			val = heightmap.getData((int)p.getX(), (int)p.getY());
+			if(val < bestVal)
+			{
+				bestVal = val;
+				result = i;
+			}
+		}
+
+		return (Point)neighbors.get(result);
 	}
 }
