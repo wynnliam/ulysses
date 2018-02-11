@@ -41,6 +41,9 @@ public class HydrosphereGenerator
 	// Used to generate the cloud frequency map.
 	private MapGenerator cloudFreqMapGenerator;
 
+	// The number of rivers we want in our map.
+	private int numRivers;
+
 	public HydrosphereGenerator()
 	{
 		this.width = 256;
@@ -49,6 +52,8 @@ public class HydrosphereGenerator
 		this.heightMap = null;
 
 		this.cloudFreqMapGenerator = null;
+
+		this.numRivers = 0;
 	}
 
 	public int getWidth()
@@ -95,6 +100,19 @@ public class HydrosphereGenerator
 	public void setCloudFreqMapGenerator(MapGenerator val)
 	{
 		this.cloudFreqMapGenerator = val;
+	}
+
+	public int getNumRivers()
+	{
+		return this.numRivers;
+	}
+
+	public void setNumRivers(int val)
+	{
+		if(val < 0)
+			val = 0;
+
+		this.numRivers = val;
 	}
 
 	public Hydrosphere generateHydrosphere()
