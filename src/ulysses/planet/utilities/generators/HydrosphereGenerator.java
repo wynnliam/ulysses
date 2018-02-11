@@ -145,6 +145,7 @@ public class HydrosphereGenerator
 		cloudFreqMap = this.cloudFreqMapGenerator.generateMap();
 		riverSourceMap = computeRiverSourceMap(cloudFreqMap);
 
+		result.setNumRivers(this.numRivers);
 		generateRivers(result, heightMap, riverSourceMap);
 
 		result.setCloudFreqMap(cloudFreqMap);

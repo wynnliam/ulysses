@@ -164,8 +164,33 @@ public class Hydrosphere
 			// Found the river. Update result and terminate the loop.
 			if(this.rivers[i].containsPoint(point))
 			{
+				System.out.println(i);
 				result = i;
 				break;
+			}
+		}
+
+		return result;
+	}
+
+	/*
+		Returns a 2D map representation of every river. For each point, we use 1 to denote
+		'apart of a river', and 0 to denote 'not apart of a river' TODO: Add more documentation.
+	*/
+	public PlanetMap getRiverMap()
+	{
+		PlanetMap result = new PlanetMap(this.width, this.height);
+
+		for(int x = 0; x < this.width; ++x)
+		{
+			for(int y = 0; y < this.height; ++y)
+			{
+				if(getRiverOf(new Point(x, y)) != -1) {
+					result.setData(x, y, 1);
+					System.out.println("wdawdwad");
+				}
+				else
+					result.setData(x, y, 0);
 			}
 		}
 

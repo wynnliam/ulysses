@@ -106,18 +106,19 @@ class UlyssesRunnable implements Runnable
 		PerlinMapGenerator clouds;
 
 		clouds = new PerlinMapGenerator(rooseBolton);
-		clouds.setOctaveCount(16);
-		clouds.setPersistence(0.5f);
+		clouds.setOctaveCount(4);
+		clouds.setPersistence(0.85f);
 
 		hg.setWidth(w);
 		hg.setHeight(h);
 		hg.setHeightMap(height);
 		hg.setCloudFreqMapGenerator(clouds);
 
-		hg.setNumRivers(20);
+		hg.setNumRivers(200);
 
 		Hydrosphere hydro = hg.generateHydrosphere();
 		PlanetMap precip = hydro.getPrecipitationMap();
+		PlanetMap riverMap = hydro.getRiverMap();
 
 		BufferedImage colorMap;
 
@@ -153,15 +154,18 @@ class UlyssesRunnable implements Runnable
 		{
 			for(int y = 0; y < h; ++y)
 			{
-				chan = (int)(255.0f * precip.getData(x, y));
-				image.setRGB(x, y, new Color(chan, chan, chan).getRGB());
+				/*chan = (int)(255.0f * precip.getData(x, y));
+				image.setRGB(x, y, new Color(chan, chan, chan).getRGB());*/
 
-				/*if(height.getData(x, y) >= 0.63f)
+				if(height.getData(x, y) >= 0.63f)
 					image.setRGB(x, y, Color.WHITE.getRGB());
 				else if(height.getData(x, y) > 0.37f)
 					image.setRGB(x, y, Color.GREEN.getRGB());
 				else
-					image.setRGB(x, y, Color.BLUE.getRGB());*/
+					image.setRGB(x, y, Color.BLUE.getRGB());
+
+				if(riverMap.getData(x, y) == 1)
+					image.setRGB(x, y, Color.PINK.getRGB());
 			}
 		}
 
