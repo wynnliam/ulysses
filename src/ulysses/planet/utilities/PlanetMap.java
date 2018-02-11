@@ -17,6 +17,9 @@ For memory efficieny's sake, we use a 1D array. To compute an index
 
 package ulysses.planet.utilities;
 
+// For creating a list of the points that is sorted.
+import java.awt.geom.Point2D;
+
 public class PlanetMap
 {
 	// The width and height of the map.
@@ -186,5 +189,62 @@ public class PlanetMap
 	{
 		for(int i = 0; i < this.data.length; ++i)
 			this.data[i] = (float)Math.sqrt(this.data[i]);
+	}
+
+	/*
+		A simple implementation of quicksort. Divides a set of points
+		into two parts based on a partitioning scheme, and then calls the
+		function again on those two parts. When we sort, we sort based
+		on the y component. The x component is just an index for a point,
+		the y component is the height value.
+
+		ARGUMENTS:
+			points - the points to sort.
+			s, e - the start and end indecies of the part of points
+			that we will parition.
+	*/
+	private void sortPoints(Point2D.Float[] points, int s, int e)
+	{
+		if(e <= s)
+			return;
+
+		int m = partition(points, s, e);
+
+		sortPoints(points, s, m);
+		sortPoints(points, m + 1, e);
+	}
+
+	/*
+		Implements the partitioning scheme for quicksort. We essentially
+		grab the first point, then swap everything smaller than it to the
+		left of it, and everything larger to the right.
+	*/
+	private int partition(Point2D.Float[] points, int s, int e)
+	{
+		int i = s - 1;
+		int j = e + 1;
+
+		Point2D.Float p = points[s];
+		Point2D.Float temp;
+
+		while(true)
+		{
+			do
+			{
+				i = i + 1;
+			} while(points[i].getY() < p.getY());
+
+			do
+			{
+				j = j - 1;
+			} while(points[j].getY() > p.getY());
+
+			if(i >= j)
+				return j;
+
+			temp = points[i];
+			points[i] = points[j];
+			points[j] = temp;
+		}
 	}
 }
