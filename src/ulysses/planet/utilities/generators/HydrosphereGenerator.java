@@ -211,7 +211,7 @@ public class HydrosphereGenerator
 							   (int)sources[index].getX() / this.width);
 
 			river = new River();
-			buildRiver(river, source, heightmap);
+			buildRiver(river, source, heightmap, hydro);
 
 			hydro.setRiver(i, river);
 		}
@@ -222,7 +222,7 @@ public class HydrosphereGenerator
 		source. We use heightmap to choose points in the river. We use a depth first
 		search algorithm that goes until ocean is found. TODO: Finish documentation
 	*/
-	private void buildRiver(River river, Point source, PlanetMap heightmap)
+	private void buildRiver(River river, Point source, PlanetMap heightmap, Hydrosphere hydro)
 	{
 		// Stores unvisited points.
 		Stack<Point> stack = new Stack<Point>();
@@ -246,7 +246,7 @@ public class HydrosphereGenerator
 
 			// TODO: Check that point is apart of another river!
 			// Found water!
-			if(heightmap.getData((int)curr.getX(), (int)curr.getY()) <= 0.37f)
+			if(heightmap.getData((int)curr.getX(), (int)curr.getY()) <= 0.37f || hydro.getRiverOf(curr) != -1)
 			{
 				while(!curr.equals(source))
 				{
