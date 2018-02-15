@@ -281,7 +281,7 @@ public class HydrosphereGenerator
 				continue;
 			else
 			{
-				next = chooseNeighbor(neighbors, heightmap);
+				next = chooseNeighbor(neighbors, heightmap, hydro);
 				stack.push(next);
 				visited[(int)next.getY() * this.width + (int)next.getX()] = true;
 				parent.put(next, curr);
@@ -322,14 +322,21 @@ public class HydrosphereGenerator
 		return result;
 	}
 
-	private Point chooseNeighbor(ArrayList<Point> neighbors, PlanetMap heightmap)
+	private Point chooseNeighbor(ArrayList<Point> neighbors, PlanetMap heightmap, Hydrosphere hydro)
 	{
 		int result = 0;
 		Point p = (Point)neighbors.get(0);
 		float val = heightmap.getData((int)p.getX(), (int)p.getY());
 		float bestVal = val;
 
-		for(int i = 1; i < neighbors.size(); ++i)
+		// Prioritize points already apart of a river
+		for(int i = 0; i < neighbors.size(); ++i)
+		{
+			if(hydro.getRiverOf((Point)neighbors.get(i)) != -1)
+				return (Point)neighbors.get(i);
+		}
+
+		for(int i = 0; i < neighbors.size(); ++i)
 		{
 			p = (Point)neighbors.get(i);
 			val = heightmap.getData((int)p.getX(), (int)p.getY());

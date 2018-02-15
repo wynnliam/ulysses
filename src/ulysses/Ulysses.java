@@ -165,7 +165,7 @@ class UlyssesRunnable implements Runnable
 					image.setRGB(x, y, Color.BLUE.getRGB());
 
 				if(riverMap.getData(x, y) == 1)
-					image.setRGB(x, y, Color.PINK.getRGB());
+					image.setRGB(x, y, Color.CYAN.getRGB());
 			}
 		}
 
