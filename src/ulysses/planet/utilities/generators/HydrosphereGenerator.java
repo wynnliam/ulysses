@@ -36,6 +36,9 @@ import java.awt.geom.Point2D;
 import java.util.Stack;
 import java.util.HashMap;
 import java.util.ArrayList;
+// Used to shuffle the neighbors that we check. This way
+// we encourage more random rivers.
+import java.util.Random;
 
 public class HydrosphereGenerator
 {
@@ -53,16 +56,19 @@ public class HydrosphereGenerator
 	// The number of rivers we want in our map.
 	private int numRivers;
 
-	public HydrosphereGenerator()
+	// Used to shuffle the order we check neighbors in getNeighbors
+	private Random rand;
+
+	public HydrosphereGenerator(long shuffleSeed)
 	{
 		this.width = 256;
 		this.height = 128;
 
 		this.heightMap = null;
-
 		this.cloudFreqMapGenerator = null;
-
 		this.numRivers = 0;
+
+		this.rand = new Random(shuffleSeed);
 	}
 
 	public int getWidth()
@@ -293,6 +299,8 @@ public class HydrosphereGenerator
 		if(!visited[d * this.width + x])
 			result.add(new Point(x, d));
 
+		shuffleNeighbors(result);
+
 		return result;
 	}
 
@@ -315,5 +323,27 @@ public class HydrosphereGenerator
 		}
 
 		return (Point)neighbors.get(result);
+	}
+
+	private void shuffleNeighbors(ArrayList<Point> neighbors)
+	{
+		if(neighbors.size() < 2)
+			return;
+
+		// n allows us to use size without accessing it.
+		// j is a randomly selected index.
+		int j, n;
+		// For swapping.
+		Point temp;
+
+		n = neighbors.size();
+		for(int i = n - 1; i > 1; --i)
+		{
+			j = this.rand.nextInt(i);
+			// Replaces the point at j with the point at i. Stores
+			// point j in temp
+			temp = (Point)neighbors.set(j, (Point)neighbors.get(i));
+			neighbors.set(i, temp);
+		}
 	}
 }
