@@ -238,10 +238,15 @@ public class HydrosphereGenerator
 		boolean[] visited = new boolean[this.width * this.height];
 		// Manages our current point.
 		Point curr;
-		// Manages the neighbors of curr.
-		ArrayList<Point> neighbors;
 		// The point to visit next.
 		Point next;
+		// When building the river, use this to examine the point
+		// before curr
+		Point prev;
+		// Use these for errosion
+		float currVal, nextVal;
+		// Manages the neighbors of curr.
+		ArrayList<Point> neighbors;
 
 		stack.push(source);
 		visited[(int)source.getY() * this.width + (int)source.getX()] = true;
@@ -249,15 +254,23 @@ public class HydrosphereGenerator
 		while(!stack.empty())
 		{
 			curr = stack.pop();
+			currVal = heightmap.getData((int)curr.getX(), (int)curr.getY());
 
 			// TODO: Check that point is apart of another river!
 			// Found water!
-			if(heightmap.getData((int)curr.getX(), (int)curr.getY()) <= 0.37f || hydro.getRiverOf(curr) != -1)
+			if(currVal <= 0.37f || hydro.getRiverOf(curr) != -1)
 			{
 				while(!curr.equals(source))
 				{
 					river.insertPoint(curr);
-					curr = (Point)parent.get(curr);
+					prev = (Point)parent.get(curr);
+					//prevVal = heightmap.getData((int)prev.getX(), (int)prev.getY());
+
+					// 'Erode' point to be the level of the parent.
+					//if(currVal > prevVal)
+						//heightmap.setData((int)curr.getX(), (int)curr.getY(), prevVal);
+
+					curr = prev;
 				}
 
 				return;
@@ -272,6 +285,11 @@ public class HydrosphereGenerator
 				stack.push(next);
 				visited[(int)next.getY() * this.width + (int)next.getX()] = true;
 				parent.put(next, curr);
+
+				// Erode next if needed
+				nextVal = heightmap.getData((int)next.getX(), (int)next.getY());
+				if(nextVal > currVal)
+					heightmap.setData((int)next.getX(), (int)next.getY(), currVal);
 			}
 		}
 	}
