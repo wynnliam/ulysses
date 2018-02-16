@@ -256,7 +256,6 @@ public class HydrosphereGenerator
 			curr = stack.pop();
 			currVal = heightmap.getData((int)curr.getX(), (int)curr.getY());
 
-			// TODO: Check that point is apart of another river!
 			// Found water!
 			if(currVal <= 0.37f || hydro.getRiverOf(curr) != -1)
 			{
@@ -362,7 +361,7 @@ public class HydrosphereGenerator
 		Point temp;
 
 		n = neighbors.size();
-		for(int i = n - 1; i > 1; --i)
+		for(int i = n - 1; i > 0; --i)
 		{
 			j = this.rand.nextInt(i);
 			// Replaces the point at j with the point at i. Stores

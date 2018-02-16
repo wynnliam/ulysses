@@ -68,8 +68,8 @@ class UlyssesRunnable implements Runnable
 		//long seed = System.nanoTime();
 		long seed = "Ponyri".hashCode();
 		Random rooseBolton = new Random(seed);
-		int w = 512;
-		int h = 256;
+		int w = 1024;
+		int h = 512;
 
 		/* LITHOSPHERE */
 		LithosphereGenerator lg = new LithosphereGenerator();
@@ -165,7 +165,7 @@ class UlyssesRunnable implements Runnable
 					image.setRGB(x, y, Color.BLUE.getRGB());
 
 				if(riverMap.getData(x, y) == 1)
-					image.setRGB(x, y, Color.CYAN.getRGB());
+					image.setRGB(x, y, Color.BLACK.getRGB());
 			}
 		}
 
