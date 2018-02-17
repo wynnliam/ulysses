@@ -114,7 +114,7 @@ class UlyssesRunnable implements Runnable
 		hg.setHeightMap(height);
 		hg.setCloudFreqMapGenerator(clouds);
 
-		hg.setNumRivers(200);
+		hg.setNumRivers(1000);
 
 		Hydrosphere hydro = hg.generateHydrosphere();
 		PlanetMap precip = hydro.getPrecipitationMap();

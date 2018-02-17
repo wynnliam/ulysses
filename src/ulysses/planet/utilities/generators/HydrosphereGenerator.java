@@ -356,7 +356,7 @@ public class HydrosphereGenerator
 
 		// n allows us to use size without accessing it.
 		// j is a randomly selected index.
-		int j, n;
+		/*int j, n;
 		// For swapping.
 		Point temp;
 
@@ -364,6 +364,20 @@ public class HydrosphereGenerator
 		for(int i = n - 1; i > 0; --i)
 		{
 			j = this.rand.nextInt(i);
+			// Replaces the point at j with the point at i. Stores
+			// point j in temp
+			temp = (Point)neighbors.set(j, (Point)neighbors.get(i));
+			neighbors.set(i, temp);
+		}*/
+
+		int i, j;
+		int n = neighbors.size();
+		Point temp;
+
+		for(int k = 0; k < 100; ++k)
+		{
+			i = this.rand.nextInt(n);
+			j = this.rand.nextInt(n);
 			// Replaces the point at j with the point at i. Stores
 			// point j in temp
 			temp = (Point)neighbors.set(j, (Point)neighbors.get(i));
