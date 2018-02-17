@@ -316,7 +316,7 @@ public class HydrosphereGenerator
 		if(!visited[d * this.width + x])
 			result.add(new Point(x, d));
 
-		shuffleNeighbors(result);
+		//shuffleNeighbors(result);
 
 		return result;
 	}
@@ -327,6 +327,7 @@ public class HydrosphereGenerator
 		Point p = (Point)neighbors.get(0);
 		float val = heightmap.getData((int)p.getX(), (int)p.getY());
 		float bestVal = val;
+		ArrayList<Point> bestNeighbors = new ArrayList<Point>();
 
 		// Prioritize points already apart of a river
 		for(int i = 0; i < neighbors.size(); ++i)
@@ -335,6 +336,7 @@ public class HydrosphereGenerator
 				return (Point)neighbors.get(i);
 		}
 
+		// Scan the neighbors to find the best value.
 		for(int i = 0; i < neighbors.size(); ++i)
 		{
 			p = (Point)neighbors.get(i);
@@ -346,7 +348,17 @@ public class HydrosphereGenerator
 			}
 		}
 
-		return (Point)neighbors.get(result);
+		// If multiple neighbors match the best valued neighbor, add them to a list and
+		// pick a random one.
+		for(int i = 0; i < neighbors.size(); ++i)
+		{
+			p = (Point)neighbors.get(i);
+			val = heightmap.getData((int)p.getX(), (int)p.getY());
+			if(val == bestVal)
+				bestNeighbors.add(p);
+		}
+
+		return (Point)bestNeighbors.get(this.rand.nextInt(bestNeighbors.size()));
 	}
 
 	private void shuffleNeighbors(ArrayList<Point> neighbors)
