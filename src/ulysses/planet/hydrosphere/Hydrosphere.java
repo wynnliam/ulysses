@@ -164,7 +164,6 @@ public class Hydrosphere
 			// Found the river. Update result and terminate the loop.
 			if(this.rivers[i] != null && this.rivers[i].containsPoint(point))
 			{
-				System.out.println(i);
 				result = i;
 				break;
 			}
