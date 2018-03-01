@@ -160,8 +160,6 @@ public class HydrosphereGenerator
 		result.setNumRivers(this.numRivers);
 		generateRivers(result, heightMap, riverSourceMap);
 
-		distToWaterMap = computeDistToWaterMap(heightMap, result);
-
 		result.setCloudFreqMap(cloudFreqMap);
 
 		return result;
@@ -370,22 +368,6 @@ public class HydrosphereGenerator
 		if(neighbors.size() < 2)
 			return;
 
-		// n allows us to use size without accessing it.
-		// j is a randomly selected index.
-		/*int j, n;
-		// For swapping.
-		Point temp;
-
-		n = neighbors.size();
-		for(int i = n - 1; i > 0; --i)
-		{
-			j = this.rand.nextInt(i);
-			// Replaces the point at j with the point at i. Stores
-			// point j in temp
-			temp = (Point)neighbors.set(j, (Point)neighbors.get(i));
-			neighbors.set(i, temp);
-		}*/
-
 		int i, j;
 		int n = neighbors.size();
 		Point temp;
@@ -398,83 +380,6 @@ public class HydrosphereGenerator
 			// point j in temp
 			temp = (Point)neighbors.set(j, (Point)neighbors.get(i));
 			neighbors.set(i, temp);
-		}
-	}
-
-	/*
-		Computes the distance to water source map for a hydrosphere. The heightmap can
-		tell us where oceans are implicitly, and the hydrosphere tells us if a point
-		is apart of a river or not.
-
-		ARGUMENTS:
-			heightMap - Tells us what points are ocean.
-			hydro - Used to tell us what points are apart of rivers.
-
-		RETURNS:
-			null if heightMap or hydrosphere were null, and thus we cannot compute the
-			map. Otherwise, returns a normalized map that estimates the distance to a water
-			source a point is.
-	*/
-	private PlanetMap computeDistToWaterMap(PlanetMap heightMap, Hydrosphere hydro) {
-		if(heightMap == null || hydro == null) {
-			return null;
-		}
-
-		// The list of points that are going to be processed immediately.
-		// We continue to process points and compute their estimated distance
-		// from water as long as this list remains not empty.
-		ArrayList<Point> toProcess = new ArrayList<Point>();
-		PlanetMap distToWaterMap = new PlanetMap(this.width, this.height);
-		// Use to store arguments for addWaterToProcessList procedure.
-		WaterProcessData waterProcessData = new WaterProcessData();
-
-		// Initialize points by marking them as unvisited and add all water points
-		// to the toProcess list:
-		initializeDistToWaterMap(distToWaterMap);
-
-		waterProcessData.heightMap = heightMap;
-		waterProcessData.hydro = hydro;
-		waterProcessData.toProcess = toProcess;
-		waterProcessData.distToWater = distToWaterMap;
-		addWaterToProcessList(waterProcessData);
-
-		// TODO: Process every point in toProcess.
-
-		return distToWaterMap;
-	}
-
-	/*
-		Marks every point in the distToWaterMap as 2. Marking it as 2 implies
-		it is unvisited. By default, every point is unvisited.
-	*/
-	private void initializeDistToWaterMap(PlanetMap distToWaterMap) {
-		for(int x = 0; x < this.width; ++x) {
-			for(int y = 0; y < this.height; ++y) {
-				distToWaterMap.setData(x, y, 2);
-			}
-		}
-	}
-
-	/*
-		For each point, if it is apart of a river or is ocean, we mark it as a 1
-		in the distToWaterMap and add it to the toProcessList. After doing this, we
-		can begin the process of estimating every point's distance to a source of water.
-	*/
-	private void addWaterToProcessList(WaterProcessData waterProcessData) {
-		Point p;
-
-		for(int x = 0; x < this.width; ++x) {
-			for(int y = 0; y < this.height; ++y) {
-				p = new Point(x, y);
-
-				if(waterProcessData.heightMap.getData(x, y) <= 0.37f ||
-				   waterProcessData.hydro.getRiverOf(p) != -1)
-				{
-					// 1 denotes a source of water.
-					waterProcessData.distToWater.setData(x, y, 1);
-					waterProcessData.toProcess.add(p);
-				}
-			}
 		}
 	}
 }

@@ -266,4 +266,55 @@ public class PlanetMap
 			points[j] = temp;
 		}
 	}
+
+	public float getMaxVal() {
+		float max = this.data[0];
+
+		for(int i = 0; i < this.data.length; ++i) {
+			if(this.data[i] > max)
+				max = this.data[i];
+		}
+
+		return max;
+	}
+
+	public float getMinVal() {
+		float min = this.data[0];
+
+		for(int i = 0; i < this.data.length; ++i) {
+			if(this.data[i] < min)
+				min = this.data[i];
+		}
+
+		return min;
+	}
+
+	public void scaleBy(float scalar) {
+		for(int i = 0; i < this.data.length; ++i)
+			this.data[i] *= scalar;
+	}
+
+	public void blurr(int numBlurrs) {
+		int l, r, u, d;
+		float val;
+
+		for(int i = 0; i < numBlurrs; ++i) {
+			for(int x = 0; x < this.width; ++x) {
+				for(int y = 0; y < this.height; ++y) {
+					val = this.data[y * this.width + x];
+					l = (x - 1 % this.width + this.width) % this.width;
+					val += this.data[y * this.width + l];
+					r = (x + 1 % this.width + this.width) % this.width;
+					val += this.data[y * this.width + r];
+					u = (y - 1 % this.height + this.height) % this.height;
+					val += this.data[u * this.width + x];
+					d = (y + 1 % this.height + this.height) % this.height;
+					val += this.data[d * this.width + x];
+
+					val /= 5.0f;
+					this.data[y * this.width + x] = val;
+				}
+			}
+		}
+	}
 }

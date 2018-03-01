@@ -38,6 +38,9 @@ public class Hydrosphere
 	// Store the frequency of clouds
 	private PlanetMap cloudFreqMap;
 
+	// Store the distance to water for each point
+	private PlanetMap distToWater;
+
 	// Stores the rivers of the world.
 	private River[] rivers;
 
@@ -47,11 +50,11 @@ public class Hydrosphere
 		setHeight(height);
 
 		this.cloudFreqMap = null;
+		this.distToWater = null;
 		this.rivers = null;
 	}
 
-	public int getWidth()
-	{
+	public int getWidth() {
 		return this.width;
 	}
 
@@ -84,6 +87,14 @@ public class Hydrosphere
 	public void setCloudFreqMap(PlanetMap val)
 	{
 		this.cloudFreqMap = val;
+	}
+
+	public PlanetMap getDistToWaterMap() {
+		return this.distToWater;
+	}
+
+	public void setDistToWaterMap(PlanetMap val) {
+		this.distToWater = val;
 	}
 
 	public int getNumRivers()
@@ -186,7 +197,6 @@ public class Hydrosphere
 			{
 				if(getRiverOf(new Point(x, y)) != -1) {
 					result.setData(x, y, 1);
-					System.out.println("wdawdwad");
 				}
 				else
 					result.setData(x, y, 0);
