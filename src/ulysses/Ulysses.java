@@ -106,8 +106,8 @@ class UlyssesRunnable implements Runnable
 		PerlinMapGenerator clouds;
 
 		clouds = new PerlinMapGenerator(rooseBolton);
-		clouds.setOctaveCount(8);
-		clouds.setPersistence(0.85f);
+		clouds.setOctaveCount(16);
+		clouds.setPersistence(0.75f);
 
 		hg.setWidth(w);
 		hg.setHeight(h);
