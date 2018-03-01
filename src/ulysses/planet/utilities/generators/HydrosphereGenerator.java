@@ -52,6 +52,9 @@ public class HydrosphereGenerator
 
 	// Used to generate the cloud frequency map.
 	private MapGenerator cloudFreqMapGenerator;
+	// Used to compute each point's distance from the
+	// equator.
+	private MapGenerator equatorMapGenerator;
 
 	// The number of rivers we want in our map.
 	private int numRivers;
@@ -117,6 +120,14 @@ public class HydrosphereGenerator
 		this.cloudFreqMapGenerator = val;
 	}
 
+	public MapGenerator getEquatorMapGenerator() {
+		return this.equatorMapGenerator;
+	}
+
+	public void setEquatorMapGenerator(MapGenerator val) {
+		this.equatorMapGenerator = val;
+	}
+
 	public int getNumRivers()
 	{
 		return this.numRivers;
@@ -144,23 +155,28 @@ public class HydrosphereGenerator
 		PlanetMap cloudFreqMap;
 		// Use this to generate rivers.
 		PlanetMap riverSourceMap;
-		// Used to compute final precipitation map.
-		PlanetMap distToWaterMap;
+		// A map to compute the distance from the equator.
+		PlanetMap equatorDistMap;
 
 		// Set the properties of each generator.
 
 		this.cloudFreqMapGenerator.setWidth(this.width);
 		this.cloudFreqMapGenerator.setHeight(this.height);
 
+		this.equatorMapGenerator.setWidth(this.width);
+		this.equatorMapGenerator.setHeight(this.height);
+
 		// Set hydrosphere properties.
 
 		cloudFreqMap = this.cloudFreqMapGenerator.generateMap();
+		equatorDistMap = this.equatorMapGenerator.generateMap();
 		riverSourceMap = computeRiverSourceMap(cloudFreqMap);
 
 		result.setNumRivers(this.numRivers);
 		generateRivers(result, heightMap, riverSourceMap);
 
 		result.setCloudFreqMap(cloudFreqMap);
+		result.setEquatorMap(equatorDistMap);
 
 		return result;
 	}

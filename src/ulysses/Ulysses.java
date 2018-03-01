@@ -104,15 +104,22 @@ class UlyssesRunnable implements Runnable
 		HydrosphereGenerator hg = new HydrosphereGenerator("Squanto".hashCode());
 		// Generators for hg;
 		PerlinMapGenerator clouds;
+		LatitudeMapGenerator lat;
 
 		clouds = new PerlinMapGenerator(rooseBolton);
 		clouds.setOctaveCount(16);
 		clouds.setPersistence(0.75f);
 
+		lat = new LatitudeMapGenerator(rooseBolton);
+		lat.setWidth(w);
+		lat.setHeight(h);
+		lat.setLatitude(h / 2);
+
 		hg.setWidth(w);
 		hg.setHeight(h);
 		hg.setHeightMap(height);
 		hg.setCloudFreqMapGenerator(clouds);
+		hg.setEquatorMapGenerator(lat);
 
 		hg.setNumRivers(1000);
 

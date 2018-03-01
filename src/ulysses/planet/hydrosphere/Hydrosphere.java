@@ -37,9 +37,8 @@ public class Hydrosphere
 
 	// Store the frequency of clouds
 	private PlanetMap cloudFreqMap;
-
-	// Store the distance to water for each point
-	private PlanetMap distToWater;
+	// Store the distance to the equator for each point.
+	private PlanetMap equatorMap;
 
 	// Stores the rivers of the world.
 	private River[] rivers;
@@ -50,7 +49,7 @@ public class Hydrosphere
 		setHeight(height);
 
 		this.cloudFreqMap = null;
-		this.distToWater = null;
+		this.equatorMap = null;
 		this.rivers = null;
 	}
 
@@ -89,12 +88,12 @@ public class Hydrosphere
 		this.cloudFreqMap = val;
 	}
 
-	public PlanetMap getDistToWaterMap() {
-		return this.distToWater;
+	public PlanetMap getEquatorMap() {
+		return this.equatorMap;
 	}
 
-	public void setDistToWaterMap(PlanetMap val) {
-		this.distToWater = val;
+	public void setEquatorMap(PlanetMap val) {
+		this.equatorMap = val;
 	}
 
 	public int getNumRivers()
@@ -208,6 +207,14 @@ public class Hydrosphere
 
 	public PlanetMap getPrecipitationMap()
 	{
-		return this.cloudFreqMap;
+		PlanetMap[] maps = new PlanetMap[1];
+		PlanetMap precip;
+
+		maps[0] = this.equatorMap;
+
+		precip = this.cloudFreqMap.combineWith(maps);
+		precip.normalize();
+
+		return precip;
 	}
 }
