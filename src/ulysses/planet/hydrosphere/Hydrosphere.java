@@ -57,8 +57,7 @@ public class Hydrosphere
 		return this.width;
 	}
 
-	public void setWidth(int val)
-	{
+	public void setWidth(int val) {
 		if(val <= 0)
 			val = 256;
 
@@ -207,10 +206,13 @@ public class Hydrosphere
 
 	public PlanetMap getPrecipitationMap()
 	{
-		PlanetMap[] maps = new PlanetMap[1];
+		PlanetMap[] maps = new PlanetMap[2];
 		PlanetMap precip;
 
 		maps[0] = this.equatorMap;
+		maps[1] = getRiverMap();
+
+		maps[1].scaleBy(0.5f);
 
 		precip = this.cloudFreqMap.combineWith(maps);
 		precip.normalize();

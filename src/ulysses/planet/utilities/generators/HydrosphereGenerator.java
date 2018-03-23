@@ -52,6 +52,8 @@ public class HydrosphereGenerator
 
 	// Used to generate the cloud frequency map.
 	private MapGenerator cloudFreqMapGenerator;
+	// Makes the river spawning more arbitrary.
+	private MapGenerator riverSourceModiferMap;
 	// Used to compute each point's distance from the
 	// equator.
 	private MapGenerator equatorMapGenerator;
@@ -69,6 +71,7 @@ public class HydrosphereGenerator
 
 		this.heightMap = null;
 		this.cloudFreqMapGenerator = null;
+		this.riverSourceModiferMap = null;
 		this.numRivers = 0;
 
 		this.rand = new Random(shuffleSeed);
@@ -120,6 +123,14 @@ public class HydrosphereGenerator
 		this.cloudFreqMapGenerator = val;
 	}
 
+	public MapGenerator getRiverSourceModifierMap() {
+		return this.riverSourceModiferMap;
+	}
+
+	public void setRiverSourceModifierMap(MapGenerator val) {
+		this.riverSourceModiferMap = val;
+	}
+
 	public MapGenerator getEquatorMapGenerator() {
 		return this.equatorMapGenerator;
 	}
@@ -153,6 +164,7 @@ public class HydrosphereGenerator
 		Hydrosphere result = new Hydrosphere(this.width, this.height);
 		// Use this to generate the river source map.
 		PlanetMap cloudFreqMap;
+		PlanetMap riverSourceModMap;
 		// Use this to generate rivers.
 		PlanetMap riverSourceMap;
 		// A map to compute the distance from the equator.
@@ -162,6 +174,9 @@ public class HydrosphereGenerator
 
 		this.cloudFreqMapGenerator.setWidth(this.width);
 		this.cloudFreqMapGenerator.setHeight(this.height);
+
+		this.riverSourceModiferMap.setWidth(this.width);
+		this.riverSourceModiferMap.setHeight(this.height);
 
 		this.equatorMapGenerator.setWidth(this.width);
 		this.equatorMapGenerator.setHeight(this.height);
@@ -183,7 +198,8 @@ public class HydrosphereGenerator
 
 	private PlanetMap computeRiverSourceMap(PlanetMap cloudFreqMap)
 	{
-		PlanetMap[] p = new PlanetMap[] { cloudFreqMap };
+		PlanetMap riverSourceModMap = this.riverSourceModiferMap.generateMap();
+		PlanetMap[] p = new PlanetMap[] { cloudFreqMap, riverSourceModMap };
 		PlanetMap riverSourceMap = this.heightMap.combineWith(p);
 
 		for(int i = 0; i < this.width * this.height; ++i)
