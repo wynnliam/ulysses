@@ -215,6 +215,7 @@ public class Hydrosphere
 		maps[1].scaleBy(0.5f);
 
 		precip = this.cloudFreqMap.combineWith(maps);
+		precip.blurr(5);
 		precip.normalize();
 
 		return precip;
