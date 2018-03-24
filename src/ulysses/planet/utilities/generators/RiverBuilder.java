@@ -135,8 +135,8 @@ public class RiverBuilder {
 		// Used to conveniently access our source point.
 		Point source;
 
-		for(int i = 0; i < this.numRivers; ++i)
-		{
+		for(int i = 0; i < this.numRivers; ++i) {
+			// Grab the next available point from the bottom of the list.
 			index = (sources.length - 1) - i;
 			// A 2D point to 1D is i = y * width + x.
 			// The opposite is x = i % width, y = i / width.
@@ -150,8 +150,19 @@ public class RiverBuilder {
 		}
 	}
 
-	private PlanetMap computeRiverSourceMap(PlanetMap heightMap)
-	{
+	/*
+		Combines the heightmap, cloudFreq map, and river source modifier map
+		to produce a map that tells us how well each point fits the conditions
+		for producing a river.
+
+		ARGUMENTS:
+			heightMap - Greater heights imply more likely a river originates there.
+
+		RETURNS:
+			the "river source map" which is assigns a score for each point based on
+			how fit a river is to spawn at each point.
+	*/
+	private PlanetMap computeRiverSourceMap(PlanetMap heightMap) {
 		PlanetMap[] p = new PlanetMap[] { this.cloudFreq, this.riverSourceModifier };
 		PlanetMap riverSourceMap = heightMap.combineWith(p);
 
@@ -170,10 +181,20 @@ public class RiverBuilder {
 	/*
 		Builds a single river. We store the result in river. The river begins at
 		source. We use heightmap to choose points in the river. We use a depth first
-		search algorithm that goes until ocean is found. TODO: Finish documentation
+		search algorithm that goes until ocean is found. To select the next point to
+		visit, we gather all of the unvisited neighbors of the current point. Then, we
+		select the "best" neighbor. This involves examining its height, is it river/ocean,
+		etc.
+
+		ARGUMENTS:
+			river - Where we store the resulting river.
+			heightmap - Used to examine the height of every point
+			hydro - used to check for points that are apart of other rivers.
+
+		RETURNS:
+			A single, randomly generated river.
 	*/
-	private void buildRiver(River river, Point source, PlanetMap heightmap, Hydrosphere hydro)
-	{
+	private void buildRiver(River river, Point source, PlanetMap heightmap, Hydrosphere hydro) {
 		// Stores unvisited points.
 		Stack<Point> stack = new Stack<Point>();
 		// Stores parent relationship. Used to build rivers.
@@ -195,16 +216,13 @@ public class RiverBuilder {
 		stack.push(source);
 		visited[(int)source.getY() * this.width + (int)source.getX()] = true;
 
-		while(!stack.empty())
-		{
+		while(!stack.empty()) {
 			curr = stack.pop();
 			currVal = heightmap.getData((int)curr.getX(), (int)curr.getY());
 
 			// Found water!
-			if(currVal <= 0.37f || hydro.getRiverOf(curr) != -1)
-			{
-				while(!curr.equals(source))
-				{
+			if(currVal <= 0.37f || hydro.getRiverOf(curr) != -1) {
+				while(!curr.equals(source)) {
 					river.insertPoint(curr);
 					prev = (Point)parent.get(curr);
 					//prevVal = heightmap.getData((int)prev.getX(), (int)prev.getY());
@@ -222,8 +240,7 @@ public class RiverBuilder {
 			neighbors = getNeighbors(curr, visited);
 			if(neighbors.isEmpty())
 				continue;
-			else
-			{
+			else {
 				next = chooseNeighbor(neighbors, heightmap, hydro);
 				stack.push(next);
 				visited[(int)next.getY() * this.width + (int)next.getX()] = true;
@@ -237,8 +254,18 @@ public class RiverBuilder {
 		}
 	}
 
-	private ArrayList<Point> getNeighbors(Point curr, boolean[] visited)
-	{
+	/*
+		Gets the set of all unvisited neighbors to expand our river to.
+
+		ARGUMENTS:
+			curr - the point to find the neighbors of.
+			visited - tells us if our river building algorithm has already
+			examined the point.
+
+		RETURNS:
+			A list containing every unvisited neighbor of curr.
+	*/
+	private ArrayList<Point> getNeighbors(Point curr, boolean[] visited) {
 		ArrayList<Point> result = new ArrayList<Point>();
 		int x, y;
 		int l, r, u, d;
@@ -265,8 +292,19 @@ public class RiverBuilder {
 		return result;
 	}
 
-	private Point chooseNeighbor(ArrayList<Point> neighbors, PlanetMap heightmap, Hydrosphere hydro)
-	{
+	/*
+		Selects the "best" neighbor to build our river with. We prioritize points with lower
+		height values and/or ones that are already apart of a river.
+
+		ARGUMENTS:
+			neighbors - The pool of neighbors to select from.
+			heightmap - Used to access the height value of each neighbor point.
+			hydro - Tells us which points are apart of a river.
+
+		RETURNS:
+			the best neighbor given our criteria from the neighbors.
+	*/
+	private Point chooseNeighbor(ArrayList<Point> neighbors, PlanetMap heightmap, Hydrosphere hydro) {
 		int result = 0;
 		Point p = (Point)neighbors.get(0);
 		float val = heightmap.getData((int)p.getX(), (int)p.getY());
@@ -274,19 +312,16 @@ public class RiverBuilder {
 		ArrayList<Point> bestNeighbors = new ArrayList<Point>();
 
 		// Prioritize points already apart of a river
-		for(int i = 0; i < neighbors.size(); ++i)
-		{
+		for(int i = 0; i < neighbors.size(); ++i) {
 			if(hydro.getRiverOf((Point)neighbors.get(i)) != -1)
 				return (Point)neighbors.get(i);
 		}
 
 		// Scan the neighbors to find the best value.
-		for(int i = 0; i < neighbors.size(); ++i)
-		{
+		for(int i = 0; i < neighbors.size(); ++i) {
 			p = (Point)neighbors.get(i);
 			val = heightmap.getData((int)p.getX(), (int)p.getY());
-			if(val < bestVal)
-			{
+			if(val < bestVal) {
 				bestVal = val;
 				result = i;
 			}
@@ -294,8 +329,7 @@ public class RiverBuilder {
 
 		// If multiple neighbors match the best valued neighbor, add them to a list and
 		// pick a random one.
-		for(int i = 0; i < neighbors.size(); ++i)
-		{
+		for(int i = 0; i < neighbors.size(); ++i) {
 			p = (Point)neighbors.get(i);
 			val = heightmap.getData((int)p.getX(), (int)p.getY());
 			if(val == bestVal)
@@ -305,8 +339,14 @@ public class RiverBuilder {
 		return (Point)bestNeighbors.get(this.rand.nextInt(bestNeighbors.size()));
 	}
 
-	private void shuffleNeighbors(ArrayList<Point> neighbors)
-	{
+	/*
+		Shuffles the list of neighbors. If this list is < 2 then there is no need to
+		shuffle this list, and we return it as is.
+
+		ARGUMENTS:
+			neighbors - the unsorted list of neighbors.
+	*/
+	private void shuffleNeighbors(ArrayList<Point> neighbors) {
 		if(neighbors.size() < 2)
 			return;
 
@@ -314,8 +354,7 @@ public class RiverBuilder {
 		int n = neighbors.size();
 		Point temp;
 
-		for(int k = 0; k < 100; ++k)
-		{
+		for(int k = 0; k < 100; ++k) {
 			i = this.rand.nextInt(n);
 			j = this.rand.nextInt(n);
 			// Replaces the point at j with the point at i. Stores
