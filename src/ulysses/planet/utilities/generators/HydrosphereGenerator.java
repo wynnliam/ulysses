@@ -278,6 +278,10 @@ public class HydrosphereGenerator {
 		int currRow, currCol, currIndex;
 		int currWaterX, currWaterY;
 
+		double smallestDist;
+		double currDist;
+		int closestWaterPoint;
+
 		PlanetMap result = new PlanetMap(this.width, this.height);
 
 		// Initialize the waterSources and their point count.
@@ -318,8 +322,63 @@ public class HydrosphereGenerator {
 										(double)currWaterY / pointCount[i]);
 		}
 
-		// TODO: Finish me!
+		for(int x = 0; x < this.width; ++x) {
+			for(int y = 0; y < this.height; ++y) {
+				if(heightmap.getData(x, y) <= this.seaLevel || riverMap.getData(x, y) == 1) {
+					result.setData(x, y, 0);
+					continue;
+				}
+
+				closestWaterPoint = -1;
+				smallestDist = 1000;
+
+				for(int i = 0; i < waterSources.length; ++i)
+				{
+					if(pointCount[i] > 0)
+					{
+						if(closestWaterPoint == -1) {
+							smallestDist = getDistFromWaterSource(x, y, waterSources[i]);
+							closestWaterPoint = i;
+						}
+
+						else {
+							currDist = getDistFromWaterSource(x, y, waterSources[i]);
+							if(currDist < smallestDist) {
+								smallestDist = currDist;
+								closestWaterPoint = i;
+							}
+						}
+					}
+				}
+
+				if(closestWaterPoint != -1)
+					result.setData(x, y, (float)smallestDist);
+				else
+					result.setData(x, y, 0.0f);
+			}
+		}
+
+		result.normalize();
+
+		for(int i = 0; i < this.width * this.height; ++i) {
+			if(heightmap.getData(i) <= 0.37f)
+				result.setData(i, 0.0f);
+			else
+				result.setData(i, -result.getData(i) + 1.0f);
+		}
 
 		return result;
+	}
+
+	private double getDistFromWaterSource(int x, int y, Point waterSource) {
+		double xDiff, yDiff;
+
+		xDiff = (double)x - waterSource.getX();
+		yDiff = (double)y - waterSource.getY();
+
+		xDiff *= xDiff;
+		yDiff *= yDiff;
+
+		return Math.sqrt(xDiff + yDiff);
 	}
 }
