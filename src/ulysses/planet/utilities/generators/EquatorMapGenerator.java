@@ -11,36 +11,36 @@ package ulysses.planet.utilities.generators;
 import ulysses.planet.utilities.PlanetMap;
 import java.util.Random;
 
-public class LatitudeMapGenerator extends MapGenerator {
+public class EquatorMapGenerator extends MapGenerator {
 
-	private int latitude;
+	private int equator;
 
-	public LatitudeMapGenerator(Random rand) {
+	public EquatorMapGenerator(Random rand) {
 		super(rand);
 
-		this.latitude = 0;
+		this.equator = 0;
 	}
 
-	public int getLatitude() {
-		return this.latitude;
+	public int getEquator() {
+		return this.equator;
 	}
 
-	public void setLatitude(int val) {
+	public void setEquator(int val) {
 		if(val < 0)
 			val = 0;
 		if(val >= this.height)
 			val = this.height - 1;
 
-		this.latitude = val;
+		this.equator = val;
 	}
 
 	public PlanetMap generateMap() {
 		PlanetMap result = new PlanetMap(this.width, this.height);
-		// The distance for each row from the latitude.
+		// The distance for each row from the equator.
 		int dist;
 
 		for(int y = 0; y < this.height; ++y) {
-			dist = (int)Math.abs(y - this.latitude);
+			dist = (int)Math.abs(y - this.equator);
 
 			for(int x = 0; x < this.width; ++x) {
 				result.setData(x, y, dist);
@@ -57,13 +57,13 @@ public class LatitudeMapGenerator extends MapGenerator {
 		return result;
 	}
 
-	private void invertMap(PlanetMap latitudeMap) {
-		int maxDist = (int)latitudeMap.getMaxVal();
+	private void invertMap(PlanetMap equatorMap) {
+		int maxDist = (int)equatorMap.getMaxVal();
 
 		for(int x = 0; x < this.width; ++x) {
 			for(int y = 0; y < this.height; ++y) {
-				latitudeMap.setData(x, y,
-									-latitudeMap.getData(x, y) + maxDist);
+				equatorMap.setData(x, y,
+									-equatorMap.getData(x, y) + maxDist);
 			}
 		}
 	}

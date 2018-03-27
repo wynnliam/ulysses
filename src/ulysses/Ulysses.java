@@ -105,7 +105,7 @@ class UlyssesRunnable implements Runnable
 		// Generators for hg;
 		PerlinMapGenerator clouds;
 		PerlinMapGenerator riverSourceMod;
-		LatitudeMapGenerator lat;
+		EquatorMapGenerator lat;
 
 		clouds = new PerlinMapGenerator(rooseBolton);
 		clouds.setOctaveCount(16);
@@ -115,10 +115,10 @@ class UlyssesRunnable implements Runnable
 		riverSourceMod.setOctaveCount(1);
 		riverSourceMod.setPersistence(0.95f);
 
-		lat = new LatitudeMapGenerator(rooseBolton);
+		lat = new EquatorMapGenerator(rooseBolton);
 		lat.setWidth(w);
 		lat.setHeight(h);
-		lat.setLatitude(h / 2);
+		lat.setEquator(h / 2);
 
 		hg.setWidth(w);
 		hg.setHeight(h);

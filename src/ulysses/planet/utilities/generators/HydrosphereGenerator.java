@@ -11,10 +11,10 @@
 	4. Use the river source map to choose where our rivers will
 	   begin
 	5. Create rivers
-	6. Use rivers + height map to compute the distance from water
-	   source map.
-	7. Use water source map + cloud map to create a precipitation
-	   map.
+	6. Create a equator map, which tells the distance each point
+	   is from the equator.
+	7. Use river map + equator map + cloud frequency map to create
+	   precitipitation map.
 
 	In this system, we assume that the amount of precipitation in
 	a given area is determined by the presence of clouds and proximity
@@ -64,8 +64,7 @@ public class HydrosphereGenerator {
 	// Used to shuffle the order we check neighbors in getNeighbors
 	private Random rand;
 
-	public HydrosphereGenerator(long shuffleSeed)
-	{
+	public HydrosphereGenerator(long shuffleSeed) {
 		this.width = 256;
 		this.height = 128;
 
@@ -80,49 +79,41 @@ public class HydrosphereGenerator {
 		this.rand = new Random(shuffleSeed);
 	}
 
-	public int getWidth()
-	{
+	public int getWidth() {
 		return this.width;
 	}
 
-	public void setWidth(int val)
-	{
+	public void setWidth(int val) {
 		if(val <= 0)
 			val = 256;
 
 		this.width = val;
 	}
 
-	public int getHeight()
-	{
+	public int getHeight() {
 		return this.height;
 	}
 
-	public void setHeight(int val)
-	{
+	public void setHeight(int val) {
 		if(val <= 0)
 			val = 128;
 
 		this.height = val;
 	}
 
-	public PlanetMap getHeightMap()
-	{
+	public PlanetMap getHeightMap() {
 		return this.heightMap;
 	}
 
-	public void setHeightMap(PlanetMap val)
-	{
+	public void setHeightMap(PlanetMap val) {
 		this.heightMap = val;
 	}
 
-	public MapGenerator getCloudFreqMapGenerator()
-	{
+	public MapGenerator getCloudFreqMapGenerator() {
 		return this.cloudFreqMapGenerator;
 	}
 
-	public void setCloudFreqMapGenerator(MapGenerator val)
-	{
+	public void setCloudFreqMapGenerator(MapGenerator val) {
 		this.cloudFreqMapGenerator = val;
 	}
 
@@ -142,8 +133,7 @@ public class HydrosphereGenerator {
 		this.equatorMapGenerator = val;
 	}
 
-	public int getNumRivers()
-	{
+	public int getNumRivers() {
 		return this.numRivers;
 	}
 
