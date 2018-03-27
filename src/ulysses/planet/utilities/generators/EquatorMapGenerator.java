@@ -1,9 +1,8 @@
 // Liam Wynn, 3/1/2018, Ulysses
 
 /*
-	Generates a map that specifies each point's proximity to the latitude.
-
-	TODO: Rename from Latitude to equator.
+	Generates a map that specifies each point's proximity to the equator.
+	Closer values tend towards 1, while values further tend toward 0.
 */
 
 package ulysses.planet.utilities.generators;

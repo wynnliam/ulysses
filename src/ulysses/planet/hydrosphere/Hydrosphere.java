@@ -11,12 +11,12 @@
 	to spawn. This entails using the Heightmap and a randomly
 	generated cloud map to define where the most likely places
 	rivers spawn. Once we have our river sources, we must
-	generate our rivers. 
+	generate our rivers.
 
-	We use both our rivers and oceans to create a map that 
-	describes the distance from sources of water. Generally
-	speaking, the closer you are to water, the more precipitation
-	you will have.
+	We then use an equator map, which describes each point's
+	normalized distance from the equator. Generally speaking,
+	the further you are from the equator, the drier the point
+	becomes.
 
 	Finally, we combine this with our cloud map to produce a
 	final precipitation map.
@@ -30,8 +30,7 @@ import ulysses.planet.utilities.PlanetMap;
 // Used to find the river of associated points.
 import java.awt.Point;
 
-public class Hydrosphere
-{
+public class Hydrosphere {
 	// The dimensions of the world.
 	private int width, height;
 
@@ -43,8 +42,7 @@ public class Hydrosphere
 	// Stores the rivers of the world.
 	private River[] rivers;
 
-	public Hydrosphere(int width, int height)
-	{
+	public Hydrosphere(int width, int height) {
 		setWidth(width);
 		setHeight(height);
 
@@ -64,26 +62,22 @@ public class Hydrosphere
 		this.width = val;
 	}
 
-	public int getHeight()
-	{
+	public int getHeight() {
 		return this.height;
 	}
 
-	public void setHeight(int val)
-	{
+	public void setHeight(int val) {
 		if(val <= 0)
 			val = 128;
 
 		this.height = val;
 	}
 
-	public PlanetMap getCloudFreqMap()
-	{
+	public PlanetMap getCloudFreqMap() {
 		return this.cloudFreqMap;
 	}
 
-	public void setCloudFreqMap(PlanetMap val)
-	{
+	public void setCloudFreqMap(PlanetMap val) {
 		this.cloudFreqMap = val;
 	}
 
@@ -95,16 +89,14 @@ public class Hydrosphere
 		this.equatorMap = val;
 	}
 
-	public int getNumRivers()
-	{
+	public int getNumRivers() {
 		if(this.rivers == null)
 			return 0;
 		else
 			return this.rivers.length;
 	}
 
-	public void setNumRivers(int val)
-	{
+	public void setNumRivers(int val) {
 		if(val < 1)
 			return;
 
@@ -122,8 +114,7 @@ public class Hydrosphere
 			the rivers array is null.
 			
 	*/
-	public River getRiver(int index)
-	{
+	public River getRiver(int index) {
 		if(this.rivers == null || index < 0 || index >= this.rivers.length)
 			return null;
 		else
@@ -139,8 +130,7 @@ public class Hydrosphere
 			index: index into the rivers array.
 			val: the river to set to in the rivers array.
 	*/
-	public void setRiver(int index, River val)
-	{
+	public void setRiver(int index, River val) {
 		if(this.rivers == null || val == null || index < 0 || index >= this.rivers.length)
 			return;
 
@@ -159,8 +149,7 @@ public class Hydrosphere
 			the index of the river that contains point OR -1 if point
 			or the rivers array is null.
 	*/
-	public int getRiverOf(Point point)
-	{
+	public int getRiverOf(Point point) {
 		if(point == null || this.rivers == null)
 			return -1;
 
@@ -168,11 +157,9 @@ public class Hydrosphere
 		// is not associated with any river.
 		int result = -1;
 
-		for(int i = 0; i < this.rivers.length; ++i)
-		{
+		for(int i = 0; i < this.rivers.length; ++i) {
 			// Found the river. Update result and terminate the loop.
-			if(this.rivers[i] != null && this.rivers[i].containsPoint(point))
-			{
+			if(this.rivers[i] != null && this.rivers[i].containsPoint(point)) {
 				result = i;
 				break;
 			}
@@ -183,16 +170,17 @@ public class Hydrosphere
 
 	/*
 		Returns a 2D map representation of every river. For each point, we use 1 to denote
-		'apart of a river', and 0 to denote 'not apart of a river' TODO: Add more documentation.
+		'apart of a river', and 0 to denote 'not apart of a river'
+
+		RETURNS:
+			A map where each point that is 0 is not apart of a river, and 1 denotes the
+			point is apart of a river.
 	*/
-	public PlanetMap getRiverMap()
-	{
+	public PlanetMap getRiverMap() {
 		PlanetMap result = new PlanetMap(this.width, this.height);
 
-		for(int x = 0; x < this.width; ++x)
-		{
-			for(int y = 0; y < this.height; ++y)
-			{
+		for(int x = 0; x < this.width; ++x) {
+			for(int y = 0; y < this.height; ++y) {
 				if(getRiverOf(new Point(x, y)) != -1) {
 					result.setData(x, y, 1);
 				}
@@ -204,8 +192,7 @@ public class Hydrosphere
 		return result;
 	}
 
-	public PlanetMap getPrecipitationMap()
-	{
+	public PlanetMap getPrecipitationMap() {
 		PlanetMap[] maps = new PlanetMap[2];
 		PlanetMap precip;
 
