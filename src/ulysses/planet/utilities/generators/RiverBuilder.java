@@ -39,6 +39,10 @@ public class RiverBuilder {
 	// A modifier to randomize the behavior of river selection.
 	private PlanetMap riverSourceModifier;
 
+	// Used to check when the river building algorithm has found
+	// ocean to thus end the process.
+	private float seaLevel;
+
 	public RiverBuilder(long shuffleSeed) {
 		this.shuffleSeed = shuffleSeed;
 		this.rand = new Random(this.shuffleSeed);
@@ -50,6 +54,8 @@ public class RiverBuilder {
 
 		this.cloudFreq = null;
 		this.riverSourceModifier = null;
+
+		this.seaLevel = 0.37f;
 	}
 
 	public long getShuffleSeed() {
@@ -103,6 +109,14 @@ public class RiverBuilder {
 
 	public void setRiverSourceModiferMap(PlanetMap val) {
 		this.riverSourceModifier = val;
+	}
+
+	public float getSeaLevel() {
+		return this.seaLevel;
+	}
+
+	public void setSeaLevel(float val) {
+		this.seaLevel = val;
 	}
 
 	/*
@@ -166,9 +180,8 @@ public class RiverBuilder {
 		PlanetMap[] p = new PlanetMap[] { this.cloudFreq, this.riverSourceModifier };
 		PlanetMap riverSourceMap = heightMap.combineWith(p);
 
-		for(int i = 0; i < this.width * this.height; ++i)
-		{
-			if(heightMap.getData(i) <= 0.37f)
+		for(int i = 0; i < this.width * this.height; ++i) {
+			if(heightMap.getData(i) <= this.seaLevel)
 				riverSourceMap.setData(i, 0.0f);
 		}
 
@@ -221,7 +234,7 @@ public class RiverBuilder {
 			currVal = heightmap.getData((int)curr.getX(), (int)curr.getY());
 
 			// Found water!
-			if(currVal <= 0.37f || hydro.getRiverOf(curr) != -1) {
+			if(currVal <= this.seaLevel || hydro.getRiverOf(curr) != -1) {
 				while(!curr.equals(source)) {
 					river.insertPoint(curr);
 					prev = (Point)parent.get(curr);

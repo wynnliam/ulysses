@@ -127,7 +127,8 @@ class UlyssesRunnable implements Runnable
 		hg.setRiverSourceModifierMap(riverSourceMod);
 		hg.setEquatorMapGenerator(lat);
 
-		hg.setNumRivers(1000);
+		hg.setNumRivers(100);
+		hg.setSeaLevel(0.37f);
 
 		Hydrosphere hydro = hg.generateHydrosphere();
 		PlanetMap precip = hydro.getPrecipitationMap();

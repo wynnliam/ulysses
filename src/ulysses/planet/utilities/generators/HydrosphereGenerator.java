@@ -55,6 +55,9 @@ public class HydrosphereGenerator {
 
 	// The number of rivers we want in our map.
 	private int numRivers;
+	// Used in the riverBuilder to mark points that terminate
+	// the algorithm.
+	private float seaLevel;
 
 	private RiverBuilder riverBuilder;
 
@@ -69,9 +72,11 @@ public class HydrosphereGenerator {
 		this.heightMap = null;
 		this.cloudFreqMapGenerator = null;
 		this.riverSourceModiferMap = null;
-		this.numRivers = 0;
 
+		this.numRivers = 0;
+		this.seaLevel = 0;
 		this.riverBuilder = new RiverBuilder(shuffleSeed);
+
 		this.rand = new Random(shuffleSeed);
 	}
 
@@ -142,16 +147,22 @@ public class HydrosphereGenerator {
 		return this.numRivers;
 	}
 
-	public void setNumRivers(int val)
-	{
+	public void setNumRivers(int val) {
 		if(val < 0)
 			val = 0;
 
 		this.numRivers = val;
 	}
 
-	public Hydrosphere generateHydrosphere()
-	{
+	public float getSeaLevel() {
+		return this.seaLevel;
+	}
+
+	public void setSeaLevel(float val) {
+		this.seaLevel = val;
+	}
+
+	public Hydrosphere generateHydrosphere() {
 		if(this.heightMap == null ||
 		   this.cloudFreqMapGenerator == null)
 		{
@@ -189,6 +200,7 @@ public class HydrosphereGenerator {
 
 		// Generate the rivers
 		riverBuilder.setNumRivers(this.numRivers);
+		riverBuilder.setSeaLevel(this.seaLevel);
 		riverBuilder.setWidth(this.width);
 		riverBuilder.setHeight(this.height);
 		riverBuilder.setCloudFrequencyMap(cloudFreqMap);
