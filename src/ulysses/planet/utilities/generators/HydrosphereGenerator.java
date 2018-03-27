@@ -199,6 +199,47 @@ public class HydrosphereGenerator {
 
 		result.setCloudFreqMap(cloudFreqMap);
 		result.setEquatorMap(equatorDistMap);
+		result.setModifiedHeightMap(computeModHeightMap(heightMap));
+
+		return result;
+	}
+
+	private PlanetMap computeModHeightMap(PlanetMap heightmap) {
+		PlanetMap result = new PlanetMap(this.width, this.height);
+
+		float min = -1, max = -1;
+		int len = this.width * this.height;
+		float val;
+		boolean bSet = false;
+
+		for(int i = 0; i < len; ++i) {
+			val = heightmap.getData(i);
+
+			if(val < this.seaLevel)
+				continue;
+
+			if(bSet == false) {
+				min = val;
+				max = val;
+				bSet = true;
+			}
+
+			else {
+				if(val < min)
+					min = val;
+				if(val > max)
+					max = val;
+			}
+		}
+
+		for(int i = 0; i < len; ++i) {
+			val = heightmap.getData(i);
+
+			if(min == max || val < 0.37f)
+				result.setData(i, 0);
+			else
+				result.setData(i, (val - min) / (max - min));
+		}
 
 		return result;
 	}

@@ -164,13 +164,11 @@ class UlyssesRunnable implements Runnable
 		mapGen.setHeight(h);
 		PlanetMap examplePerlin = mapGen.generateMap();*/
 
-		PlanetMap testMap = computeSpecialNormalMap(height, w, h);
-
 		for(int x = 0; x < w; ++x)
 		{
 			for(int y = 0; y < h; ++y)
 			{
-				chan = (int)(255.0f * testMap.getData(x, y));
+				chan = (int)(255.0f * precip.getData(x, y));
 				image.setRGB(x, y, new Color(chan, chan, chan).getRGB());
 
 				/*if(height.getData(x, y) >= 0.63f)
@@ -188,46 +186,6 @@ class UlyssesRunnable implements Runnable
 		frame.pack();
 		screen.setImage(image);
 		screen.repaint();
-	}
-
-	private PlanetMap computeSpecialNormalMap(PlanetMap height, int w, int h) {
-		PlanetMap result = new PlanetMap(w, h);
-
-		float min = -1, max = -1;
-		int len = w * h;
-		float val;
-		boolean bSet = false;
-
-		for(int i = 0; i < len; ++i) {
-			val = height.getData(i);
-
-			if(val < 0.37f)
-				continue;
-
-			if(bSet == false) {
-				min = val;
-				max = val;
-				bSet = true;
-			}
-
-			else {
-				if(val < min)
-					min = val;
-				if(val > max)
-					max = val;
-			}
-		}
-
-		for(int i = 0; i < len; ++i) {
-			val = height.getData(i);
-
-			if(min == max || val < 0.37f)
-				result.setData(i, 0);
-			else
-				result.setData(i, (val - min) / (max - min));
-		}
-
-		return result;
 	}
 }
 
