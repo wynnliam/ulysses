@@ -28,7 +28,8 @@ import ulysses.planet.Hydrosphere;
 import ulysses.planet.River;
 // Used to store the height map.
 import ulysses.planet.utilities.PlanetMap;
-// Used in generating rivers.
+// Used in generating rivers and approximating sources of water.
+import java.awt.Point;
 import java.awt.geom.Point2D;
 // Used in river generation.
 // Used to shuffle the neighbors that we check. This way
@@ -168,6 +169,9 @@ public class HydrosphereGenerator {
 		PlanetMap riverSourceMap;
 		// A map to compute the distance from the equator.
 		PlanetMap equatorDistMap;
+		// A map that stores the approxixmate distance to a
+		// source of water.
+		PlanetMap waterSourceDistMap;
 
 		// Set the properties of each generator.
 
@@ -200,6 +204,9 @@ public class HydrosphereGenerator {
 		result.setCloudFreqMap(cloudFreqMap);
 		result.setEquatorMap(equatorDistMap);
 		result.setModifiedHeightMap(computeModHeightMap(heightMap));
+
+		waterSourceDistMap = computeApproxDistToWaterSource(heightMap, result.getRiverMap());
+		result.setApproxDistToWaterMap(waterSourceDistMap);
 
 		return result;
 	}
@@ -251,6 +258,67 @@ public class HydrosphereGenerator {
 			else
 				result.setData(i, (val - min) / (max - min));
 		}
+
+		return result;
+	}
+
+	private PlanetMap computeApproxDistToWaterSource(PlanetMap heightmap, PlanetMap riverMap) {
+		// The size of the cells that we divide the world, in pixels.
+		int CELL_SIZE = 20;
+		// The number of cells in each row of cells.
+		int rowCount = (int)Math.ceil((double)this.width / CELL_SIZE);
+		// The number of cells in each column of cells.
+		int colCount = (int)Math.ceil((double)this.height / CELL_SIZE);
+		// For each cell of points, this stores the average position of water.
+		Point[] waterSources = new Point[rowCount * colCount];
+		// For each cell of points, stores the number of points used to compute
+		// the average water source.
+		int[] pointCount = new int[waterSources.length];
+
+		int currRow, currCol, currIndex;
+		int currWaterX, currWaterY;
+
+		PlanetMap result = new PlanetMap(this.width, this.height);
+
+		// Initialize the waterSources and their point count.
+		for(int i = 0; i < waterSources.length; ++i) {
+			waterSources[i] = new Point();
+			pointCount[i] = 0;
+		}
+
+		// Compute the sum of every water point in each cell.
+		// Scan each point, if it is water (river or ocean),
+		// find its cell. For that cell's respective waterSource point,
+		// add the x and y value to that point and increment the pointCount.
+		for(int x = 0; x < this.width; ++x) {
+			for(int y = 0; y < this.height; ++y) {
+				if(heightmap.getData(x, y) <= this.seaLevel || riverMap.getData(x, y) == 1) {
+					currRow = x / CELL_SIZE;
+					currCol = y / CELL_SIZE;
+					currIndex = currRow * colCount + currCol;
+
+					currWaterX = (int)waterSources[currIndex].getX();
+					currWaterY = (int)waterSources[currIndex].getY();
+					currWaterX += x; currWaterY += y;
+					waterSources[currIndex].setLocation(currWaterX, currWaterY);
+					pointCount[currIndex] += 1;
+				}
+			}
+		}
+
+		// Now find the average water point for each cell.
+		for(int i = 0; i < waterSources.length; ++i) {
+			if(pointCount[i] <= 0)
+				continue;
+
+			currWaterX = (int)waterSources[i].getX();
+			currWaterY = (int)waterSources[i].getY();
+
+			waterSources[i].setLocation((double)currWaterX / pointCount[i],
+										(double)currWaterY / pointCount[i]);
+		}
+
+		// TODO: Finish me!
 
 		return result;
 	}
