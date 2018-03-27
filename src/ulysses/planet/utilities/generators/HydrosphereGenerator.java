@@ -204,6 +204,17 @@ public class HydrosphereGenerator {
 		return result;
 	}
 
+	/*
+		Computes a modified heightmap that normalizes each point based only
+		on values above the seaLevel. Those at or below it are set to zero in
+		the final map.
+
+		ARGUMENTS:
+			heightmap - the original heightmap of the planet.
+
+		RETURNS:
+			A heightmap that is normalized based on data points above seaLevel.
+	*/
 	private PlanetMap computeModHeightMap(PlanetMap heightmap) {
 		PlanetMap result = new PlanetMap(this.width, this.height);
 
