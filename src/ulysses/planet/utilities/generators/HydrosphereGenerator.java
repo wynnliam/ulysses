@@ -231,22 +231,20 @@ public class HydrosphereGenerator {
 		RETURNS:
 			null if the heightmap or rivermap are null, or a planet map that gives us the
 			approximate distance to water.
+
+		Method size: 95 lines
 	*/
 	private PlanetMap computeApproxDistToWaterSource(PlanetMap heightmap, PlanetMap riverMap) {
 		if(heightmap == null || riverMap == null)
 			return null;
 
 		// The size of the cells that we divide the world, in pixels.
-		int CELL_SIZE = 20;
+		int CELL_SIZE = 100;
 		// The number of cells in each row of cells.
 		int rowCount = (int)Math.ceil((double)this.width / CELL_SIZE);
 		// The number of cells in each column of cells.
 		int colCount = (int)Math.ceil((double)this.height / CELL_SIZE);
-		// For each cell of points, this stores the average position of water.
-		Point[] waterSources = new Point[rowCount * colCount];
-		// For each cell of points, stores the number of points used to compute
-		// the average water source.
-		int[] pointCount = new int[waterSources.length];
+		WaterSourcesContainer water = new WaterSourcesContainer();
 
 		int currRow, currCol, currIndex;
 		int currWaterX, currWaterY;
@@ -258,10 +256,7 @@ public class HydrosphereGenerator {
 		PlanetMap result = new PlanetMap(this.width, this.height);
 
 		// Initialize the waterSources and their point count.
-		for(int i = 0; i < waterSources.length; ++i) {
-			waterSources[i] = new Point();
-			pointCount[i] = 0;
-		}
+		water.initialize(rowCount * colCount);
 
 		// Compute the sum of every water point in each cell.
 		// Scan each point, if it is water (river or ocean),
@@ -273,28 +268,15 @@ public class HydrosphereGenerator {
 					currRow = x / CELL_SIZE;
 					currCol = y / CELL_SIZE;
 					currIndex = currRow * colCount + currCol;
-
-					currWaterX = (int)waterSources[currIndex].getX();
-					currWaterY = (int)waterSources[currIndex].getY();
-					currWaterX += x; currWaterY += y;
-					waterSources[currIndex].setLocation(currWaterX, currWaterY);
-					pointCount[currIndex] += 1;
+					water.addPoint(x, y, currIndex);
 				}
 			}
 		}
 
 		// Now find the average water point for each cell.
-		for(int i = 0; i < waterSources.length; ++i) {
-			if(pointCount[i] <= 0)
-				continue;
+		water.average();
 
-			currWaterX = (int)waterSources[i].getX();
-			currWaterY = (int)waterSources[i].getY();
-
-			waterSources[i].setLocation((double)currWaterX / pointCount[i],
-										(double)currWaterY / pointCount[i]);
-		}
-
+		// Now compute the approximate distance to water for each point.
 		for(int x = 0; x < this.width; ++x) {
 			for(int y = 0; y < this.height; ++y) {
 				if(heightmap.getData(x, y) <= this.seaLevel || riverMap.getData(x, y) == 1) {
@@ -302,32 +284,7 @@ public class HydrosphereGenerator {
 					continue;
 				}
 
-				closestWaterPoint = -1;
-				smallestDist = 1000;
-
-				for(int i = 0; i < waterSources.length; ++i)
-				{
-					if(pointCount[i] > 0)
-					{
-						if(closestWaterPoint == -1) {
-							smallestDist = getDistFromWaterSource(x, y, waterSources[i]);
-							closestWaterPoint = i;
-						}
-
-						else {
-							currDist = getDistFromWaterSource(x, y, waterSources[i]);
-							if(currDist < smallestDist) {
-								smallestDist = currDist;
-								closestWaterPoint = i;
-							}
-						}
-					}
-				}
-
-				if(closestWaterPoint != -1)
-					result.setData(x, y, (float)smallestDist);
-				else
-					result.setData(x, y, 0.0f);
+				result.setData(x, y, water.getDistToWater(x, y));
 			}
 		}
 
@@ -341,18 +298,6 @@ public class HydrosphereGenerator {
 		}
 
 		return result;
-	}
-
-	private double getDistFromWaterSource(int x, int y, Point waterSource) {
-		double xDiff, yDiff;
-
-		xDiff = (double)x - waterSource.getX();
-		yDiff = (double)y - waterSource.getY();
-
-		xDiff *= xDiff;
-		yDiff *= yDiff;
-
-		return Math.sqrt(xDiff + yDiff);
 	}
 
 	/*
