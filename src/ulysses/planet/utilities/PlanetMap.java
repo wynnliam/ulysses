@@ -20,15 +20,13 @@ package ulysses.planet.utilities;
 // For creating a list of the points that is sorted.
 import java.awt.geom.Point2D;
 
-public class PlanetMap
-{
+public class PlanetMap {
 	// The width and height of the map.
 	private final int width, height;
 	// The data we want to store.
 	private final float[] data;
 
-	public PlanetMap(int width, int height)
-	{
+	public PlanetMap(int width, int height) {
 		if(width <= 0)
 			width = 256;
 		if(height <= 0)
@@ -40,13 +38,11 @@ public class PlanetMap
 		this.data = new float[this.width * this.height];
 	}
 
-	public int getWidth()
-	{
+	public int getWidth() {
 		return this.width;
 	}
 
-	public int getHeight()
-	{
+	public int getHeight() {
 		return this.height;
 	}
 
@@ -60,8 +56,7 @@ public class PlanetMap
 		RETURNS:
 			the data value at index.
 	*/
-	public float getData(int index)
-	{
+	public float getData(int index) {
 		return this.data[index];
 	}
 
@@ -76,8 +71,7 @@ public class PlanetMap
 		RETURNS:
 			The data at the given point.
 	*/
-	public float getData(int x, int y)
-	{
+	public float getData(int x, int y) {
 		return getData(y * this.width + x);
 	}
 
@@ -89,8 +83,7 @@ public class PlanetMap
 			index - where we set the data at.
 			val - the value to set the data to.
 	*/
-	public void setData(int index, float val)
-	{
+	public void setData(int index, float val) {
 		this.data[index] = val;
 	}
 
@@ -103,8 +96,7 @@ public class PlanetMap
 			x, y - the point to access.
 			val - the value to set our data to.
 	*/
-	public void setData(int x, int y, float val)
-	{
+	public void setData(int x, int y, float val) {
 		setData(y * this.width + x, val);
 	}
 
@@ -129,8 +121,7 @@ public class PlanetMap
 
 		After calling this, every value will be between 0 and 1.
 	*/
-	public void normalize()
-	{
+	public void normalize() {
 		// Used to normalize every point.
 		float max, min;
 		// A value we divide every point by.
@@ -142,8 +133,7 @@ public class PlanetMap
 		min = this.data[0];
 
 		// First find the max and the min.
-		for(int i = 0; i < this.data.length; ++i)
-		{
+		for(int i = 0; i < this.data.length; ++i) {
 			if(this.data[i] > max)
 				max = this.data[i];
 			if(this.data[i] < min)
@@ -152,8 +142,7 @@ public class PlanetMap
 
 		maxDist = max - min;
 
-		for(int i = 0; i < this.data.length; ++i)
-		{
+		for(int i = 0; i < this.data.length; ++i) {
 			if(maxDist == 0.0f)
 				this.data[i] = 0.0f;
 			else
@@ -177,8 +166,7 @@ public class PlanetMap
 			Otherwise, it returns a new map that uses the combine
 			formula specified above.
 	*/
-	public PlanetMap combineWith(PlanetMap[] p)
-	{
+	public PlanetMap combineWith(PlanetMap[] p) {
 		if(p == null || p[0].getWidth() != this.width || p[0].getHeight() != this.height)
 			return null;
 
@@ -197,8 +185,7 @@ public class PlanetMap
 	/*
 		Performs an element-wise square root operation.
 	*/
-	public void sqrt()
-	{
+	public void sqrt() {
 		for(int i = 0; i < this.data.length; ++i)
 			this.data[i] = (float)Math.sqrt(this.data[i]);
 	}
@@ -207,8 +194,7 @@ public class PlanetMap
 		Returns a list of the data in a set of 2D points where x is the position
 		and y is the map value. This data is sorted from smallest to largest.
 	*/
-	public Point2D.Float[] getSortedPoints()
-	{
+	public Point2D.Float[] getSortedPoints() {
 		int len = this.width * this.height;
 		Point2D.Float[] temp = new Point2D.Float[len];
 
@@ -234,8 +220,7 @@ public class PlanetMap
 			s, e - the start and end indecies of the part of points
 			that we will parition.
 	*/
-	private void sortPoints(Point2D.Float[] points, int s, int e)
-	{
+	private void sortPoints(Point2D.Float[] points, int s, int e) {
 		if(e <= s)
 			return;
 
@@ -250,23 +235,19 @@ public class PlanetMap
 		grab the first point, then swap everything smaller than it to the
 		left of it, and everything larger to the right.
 	*/
-	private int partition(Point2D.Float[] points, int s, int e)
-	{
+	private int partition(Point2D.Float[] points, int s, int e) {
 		int i = s - 1;
 		int j = e + 1;
 
 		Point2D.Float p = points[s];
 		Point2D.Float temp;
 
-		while(true)
-		{
-			do
-			{
+		while(true) {
+			do {
 				i = i + 1;
 			} while(points[i].getY() < p.getY());
 
-			do
-			{
+			do {
 				j = j - 1;
 			} while(points[j].getY() > p.getY());
 
