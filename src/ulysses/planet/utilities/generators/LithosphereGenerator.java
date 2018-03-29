@@ -16,8 +16,7 @@ import ulysses.planet.*;
 
 import java.util.Random;
 
-public class LithosphereGenerator
-{
+public class LithosphereGenerator {
 	// The dimensions of the resulting map.
 	private int width, height;
 	// A value from 0 to 1 that is the percentage
@@ -33,8 +32,7 @@ public class LithosphereGenerator
 	private MapGenerator thicknessMapGenerator;
 	private MapGenerator orogenicsMapGenerator;
 
-	public LithosphereGenerator()
-	{
+	public LithosphereGenerator() {
 		this.width = 256;
 		this.height = 128;
 
@@ -46,85 +44,71 @@ public class LithosphereGenerator
 		this.orogenicsMapGenerator = null;
 	}
 
-	public int getWidth()
-	{
+	public int getWidth() {
 		return this.width;
 	}
 
-	public void setWidth(int val)
-	{
+	public void setWidth(int val) {
 		if(val <= 0)
 			val = 256;
 
 		this.width = val;
 	}
 
-	public int getHeight()
-	{
+	public int getHeight() {
 		return this.height;
 	}
 
-	public void setHeight(int val)
-	{
+	public void setHeight(int val) {
 		if(val <= 0)
 			val = 128;
 
 		this.height = val;
 	}
 
-	public float getPercentLand()
-	{
+	public float getPercentLand() {
 		return this.percentLand;
 	}
 
-	public void setPercentLand(float val)
-	{
+	public void setPercentLand(float val) {
 		if(val < 0.0f || val > 1.0f)
 			val = 0.3f;
 
 		this.percentLand = val;
 	}
 
-	public float getPercentMountains()
-	{
+	public float getPercentMountains() {
 		return this.percentMountains;
 	}
 
-	public void setPercentMountains(float val)
-	{
+	public void setPercentMountains(float val) {
 		if(val < 0.0f || val > 1.0f)
 			val = 0.058f;
 
 		this.percentMountains = val;
 	}
 
-	public MapGenerator getTectonicsMapGenerator()
-	{
+	public MapGenerator getTectonicsMapGenerator() {
 		return this.tectonicsMapGenerator;
 	}
 
-	public void setTectonicsMapGenerator(MapGenerator val)
-	{
+	public void setTectonicsMapGenerator(MapGenerator val) {
 		this.tectonicsMapGenerator = val;
 	}
 
-	public MapGenerator getThicknessMapGenerator()
-	{
+	public MapGenerator getThicknessMapGenerator() {
 		return this.thicknessMapGenerator;
 	}
 
-	public void setThicknessMapGenerator(MapGenerator val)
-	{
+	public void setThicknessMapGenerator(MapGenerator val) {
 		this.thicknessMapGenerator = val;
 	}
 
-	public MapGenerator getOrogenicsMapGenerator()
-	{
+	public MapGenerator getOrogenicsMapGenerator() {
 		return this.orogenicsMapGenerator;
 	}
 
-	public void setOrogenicsMapGenerator(MapGenerator val)
-	{
+	public void setOrogenicsMapGenerator(MapGenerator val) {
 		this.orogenicsMapGenerator = val;
 	}
 
@@ -139,8 +123,7 @@ public class LithosphereGenerator
 		RETURNS:
 			A new lithosphere, or null if any of the generators are null.
 	*/
-	public Lithosphere generateLithosphere()
-	{
+	public Lithosphere generateLithosphere() {
 		if(this.tectonicsMapGenerator == null ||
 		   this.thicknessMapGenerator == null ||
 		   this.orogenicsMapGenerator == null)

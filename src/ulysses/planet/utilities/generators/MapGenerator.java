@@ -14,15 +14,13 @@ import ulysses.planet.utilities.PlanetMap;
 // For choosing random noise values.
 import java.util.Random;
 
-public abstract class MapGenerator
-{
+public abstract class MapGenerator {
 	// The dimensions for the map to generate
 	protected int width, height;
 	// Used for choosing random numbers.
 	protected Random rand;
 
-	public MapGenerator(Random rand)
-	{
+	public MapGenerator(Random rand) {
 		if(rand == null)
 			rand = new Random();
 
@@ -32,39 +30,33 @@ public abstract class MapGenerator
 		this.height = 128;
 	}
 
-	public int getWidth()
-	{
+	public int getWidth() {
 		return this.width;
 	}
 
-	public void setWidth(int val)
-	{
+	public void setWidth(int val) {
 		if(val <= 0)
 			val = 256;
 
 		this.width = val;
 	}
 
-	public int getHeight()
-	{
+	public int getHeight() {
 		return this.height;
 	}
 
-	public void setHeight(int val)
-	{
+	public void setHeight(int val) {
 		if(val <= 0)
 			val = 128;
 
 		this.height = val;
 	}
 
-	public Random getRandom()
-	{
+	public Random getRandom() {
 		return this.rand;
 	}
 
-	public void setRandom(Random val)
-	{
+	public void setRandom(Random val) {
 		if(val == null)
 			val = new Random();
 

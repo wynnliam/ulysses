@@ -17,42 +17,36 @@ import ulysses.planet.utilities.PlanetMap;
 // For choosing random noise values.
 import java.util.Random;
 
-public class PerlinMapGenerator extends MapGenerator
-{
+public class PerlinMapGenerator extends MapGenerator {
 	// Describe noise generating fields.
 	// The number of smooth noise maps to combine
 	private int octaveCount;
 	// Used in blending the smooth noise maps together.
 	private float persistence;
 
-	public PerlinMapGenerator(Random rand)
-	{
+	public PerlinMapGenerator(Random rand) {
 		super(rand);
 
 		this.octaveCount = 8;
 		this.persistence = 0.75f;
 	}
 
-	public int getOctaveCount()
-	{
+	public int getOctaveCount() {
 		return this.octaveCount;
 	}
 
-	public void setOctaveCount(int val)
-	{
+	public void setOctaveCount(int val) {
 		if(val <= 0)
 			val = 1;
 
 		this.octaveCount = val;
 	}
 
-	public float getPersistence()
-	{
+	public float getPersistence() {
 		return this.persistence;
 	}
 
-	public void setPersistence(float val)
-	{
+	public void setPersistence(float val) {
 		if(val <= 0)
 			val = 0.5f;
 		if(val > 1.0f)
@@ -70,8 +64,7 @@ public class PerlinMapGenerator extends MapGenerator
 		RETURNS:
 			A randomly generated noise map.
 	*/
-	public PlanetMap generateMap()
-	{
+	public PlanetMap generateMap() {
 		// What we will return.
 		PlanetMap result = new PlanetMap(this.width, this.height);
 		// Use this to produce final, smooth noise.
@@ -81,8 +74,7 @@ public class PerlinMapGenerator extends MapGenerator
 		int index;
 
 		// Final step, add noise to result.
-		for(int x = 0; x < this.width; ++x)
-		{
+		for(int x = 0; x < this.width; ++x) {
 			for(int y = 0; y < this.height; ++y)
 				result.setData(x, y, smoothNoise[x][y]);
 		}
@@ -102,8 +94,7 @@ public class PerlinMapGenerator extends MapGenerator
 		RETURNS:
 			the smooth noise.
 	*/
-	private float[][] getSmoothNoise(float[][] base)
-	{
+	private float[][] getSmoothNoise(float[][] base) {
 		float[][] result = getEmptyArray();
 		float[][][] smoothMaps = new float[this.octaveCount][][];
 		float amplitude = 1.0f;
@@ -113,12 +104,10 @@ public class PerlinMapGenerator extends MapGenerator
 			smoothMaps[i] = getSmoothNoise(base, i);
 
 		// Blend the noise together.
-		for(int o = this.octaveCount - 1; o >= 0; --o)
-		{
+		for(int o = this.octaveCount - 1; o >= 0; --o) {
 			amplitude *= this.persistence;
 
-			for(int x = 0; x < this.width; ++x)
-			{
+			for(int x = 0; x < this.width; ++x) {
 				for(int y = 0; y < this.height; ++y)
 					result[x][y] += smoothMaps[o][x][y] * amplitude;
 			}
@@ -140,8 +129,7 @@ public class PerlinMapGenerator extends MapGenerator
 		RETURNS:
 			Smooth noise.
 	*/
-	private float[][] getSmoothNoise(float[][] baseNoise, int octave)
-	{
+	private float[][] getSmoothNoise(float[][] baseNoise, int octave) {
 		// What we will return.
 		float[][] result = getEmptyArray();
 
@@ -155,14 +143,12 @@ public class PerlinMapGenerator extends MapGenerator
 		float hBlend, vBlend;
 		float top, bot;
 
-		for(int x = 0; x < this.width; ++x)
-		{
+		for(int x = 0; x < this.width; ++x) {
 			sampX0 = (x / period) * period;
 			sampX1 = (sampX0 + period) % this.width;
 			hBlend = (x - sampX0) * freq;
 
-			for(int y = 0; y < this.height; ++y)
-			{
+			for(int y = 0; y < this.height; ++y) {
 				sampY0 = (y / period) * period;
 				sampY1 = (sampY0 + period) % height;
 				vBlend = (y - sampY0) * freq;
@@ -184,8 +170,7 @@ public class PerlinMapGenerator extends MapGenerator
 	/*
 		Performs linear interpolation on two values.
 	*/
-	private float interp(float x0, float x1, float alpha)
-	{
+	private float interp(float x0, float x1, float alpha) {
 		return x0 * (1 - alpha) + alpha * x1;
 	}
 
@@ -197,13 +182,11 @@ public class PerlinMapGenerator extends MapGenerator
 		RETURNS:
 			a 2D map of random floats between 0 and 1.
 	*/
-	private float[][] generateWhiteNoise()
-	{
+	private float[][] generateWhiteNoise() {
 		// What we will return.
 		float[][] result = new float[this.width][];
 
-		for(int x = 0; x < this.width; ++x)
-		{
+		for(int x = 0; x < this.width; ++x) {
 			result[x] = new float[this.height];
 			for(int y = 0; y < this.height; ++y)
 				result[x][y] = (float)rand.nextDouble();
@@ -215,8 +198,7 @@ public class PerlinMapGenerator extends MapGenerator
 	/*
 		Creates a width x height empty array (array of zeroes).
 	*/
-	private float[][] getEmptyArray()
-	{
+	private float[][] getEmptyArray() {
 		float[][] result = new float[this.width][];
 
 		for(int x = 0; x < this.width; ++x)

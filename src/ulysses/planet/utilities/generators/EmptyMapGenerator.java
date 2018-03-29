@@ -9,15 +9,12 @@ package ulysses.planet.utilities.generators;
 import ulysses.planet.utilities.PlanetMap;
 import java.util.Random;
 
-public class EmptyMapGenerator extends MapGenerator
-{
-	public EmptyMapGenerator(Random rand)
-	{
+public class EmptyMapGenerator extends MapGenerator {
+	public EmptyMapGenerator(Random rand) {
 		super(rand);
 	}
 
-	public PlanetMap generateMap()
-	{
+	public PlanetMap generateMap() {
 		PlanetMap result = new PlanetMap(this.width, this.height);
 
 		for(int i = 0; i < this.width * this.height; ++i)

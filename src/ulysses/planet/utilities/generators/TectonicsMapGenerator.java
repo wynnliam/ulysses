@@ -29,25 +29,21 @@ import java.util.ArrayList;
 // For choosing points.
 import java.util.Random;
 
-public class TectonicsMapGenerator extends MapGenerator
-{
+public class TectonicsMapGenerator extends MapGenerator {
 	// Used to generate the correct number of plates.
 	private int numPlates;
 
-	public TectonicsMapGenerator(Random rand)
-	{
+	public TectonicsMapGenerator(Random rand) {
 		super(rand);
 
 		this.numPlates = 20;
 	}
 
-	public int getNumPlates()
-	{
+	public int getNumPlates() {
 		return this.numPlates;
 	}
 
-	public void setNumPlates(int val)
-	{
+	public void setNumPlates(int val) {
 		if(val <= 0)
 			val = 20;
 
@@ -57,8 +53,7 @@ public class TectonicsMapGenerator extends MapGenerator
 	/*
 		The main driver for generating the tectonics map
 	*/
-	public PlanetMap generateMap()
-	{
+	public PlanetMap generateMap() {
 		// What we will return.
 		PlanetMap result = new PlanetMap(this.width, this.height);
 		// The center of each plate. Used in computing the age.
@@ -86,14 +81,11 @@ public class TectonicsMapGenerator extends MapGenerator
 			centers - Where we store the plate centers.
 			crust - Used to look up marked and unmarked crust.
 	*/
-	private void choosePlateCenters(Point[] centers, int[] crust)
-	{
+	private void choosePlateCenters(Point[] centers, int[] crust) {
 		int x, y;
 
-		for(int i = 0; i < this.numPlates; ++i)
-		{
-			do
-			{
+		for(int i = 0; i < this.numPlates; ++i) {
+			do {
 				x = rand.nextInt(this.width);
 				y = rand.nextInt(this.height);
 			} while(crust[y * this.width + x] != -1);
@@ -123,8 +115,7 @@ public class TectonicsMapGenerator extends MapGenerator
 			crust - tells us the owning plate of a particular point of crust,
 			or if it is unowned.
 	*/
-	private void computeTectonicData(PlanetMap tectonicsMap, Point[] center, int[] crust)
-	{
+	private void computeTectonicData(PlanetMap tectonicsMap, Point[] center, int[] crust) {
 		// Keeps track of the crust points on the edge of each plate.
 		ArrayList<Point>[] border = new ArrayList[this.numPlates];
 		// If >= 1, Means we have at least one edge crust with points we
@@ -140,8 +131,7 @@ public class TectonicsMapGenerator extends MapGenerator
 		int l, r, u, d;
 
 		// Initialize the border list with the centers.
-		for(int i = 0; i < this.numPlates; ++i)
-		{
+		for(int i = 0; i < this.numPlates; ++i) {
 			tectonicsMap.setData((int)center[i].getX(), (int)center[i].getY(), 0);
 			border[i] = new ArrayList<>();
 			border[i].add(new Point(center[i]));
@@ -149,15 +139,13 @@ public class TectonicsMapGenerator extends MapGenerator
 
 		// All borders now have one point in them.
 		maxBorderSize = 1;
-		while(maxBorderSize > 0)
-		{
+		while(maxBorderSize > 0) {
 			// Assume it is 0 for now. If all plates have a border size of 0, then
 			// we cannot add anymore crust to any plate so we are done. Otherwise,
 			// we can still add crust to at least one plate.
 			maxBorderSize = 0;
 
-			for(int i = 0; i < this.numPlates; ++i)
-			{
+			for(int i = 0; i < this.numPlates; ++i) {
 				if(border[i].isEmpty())
 					continue;
 
@@ -194,15 +182,13 @@ public class TectonicsMapGenerator extends MapGenerator
 			border - the border list for the plate.
 			crust - the crust map.
 	*/
-	private void addCrustToPlate(Point toAdd, int plate, ArrayList<Point>[] border, int[] crust)
-	{
+	private void addCrustToPlate(Point toAdd, int plate, ArrayList<Point>[] border, int[] crust) {
 		int indexToAdd;
 
 		indexToAdd = (int)toAdd.getY() * this.width + (int)toAdd.getX();
 
 	    // Left neighbor.
-		if(crust[indexToAdd] == -1)
-		{
+		if(crust[indexToAdd] == -1) {
 			// Mark as apart of this plate
 			crust[indexToAdd] = plate;
 			border[plate].add(toAdd);
@@ -219,8 +205,7 @@ public class TectonicsMapGenerator extends MapGenerator
 			tectonicsMap - where we store the final noise values.
 			crust - maps points to plates. 
 	*/
-	private void generateTectonicValues(PlanetMap tectonicsMap, int[] crust)
-	{
+	private void generateTectonicValues(PlanetMap tectonicsMap, int[] crust) {
 		// The values for each plate.
 		float[] tectonics = new float[this.numPlates];
 
