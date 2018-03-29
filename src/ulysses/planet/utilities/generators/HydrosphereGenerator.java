@@ -13,8 +13,9 @@
 	5. Create rivers
 	6. Create a equator map, which tells the distance each point
 	   is from the equator.
-	7. Use river map + equator map + cloud frequency map to create
-	   precitipitation map.
+	7. Create an approximate distance to water map
+	8. Use river map + equator map + cloud frequency  + approximate
+	   distance to water map to create precitipitation map.
 
 	In this system, we assume that the amount of precipitation in
 	a given area is determined by the presence of clouds and proximity
@@ -203,7 +204,7 @@ public class HydrosphereGenerator {
 
 		result.setCloudFreqMap(cloudFreqMap);
 		result.setEquatorMap(equatorDistMap);
-		result.setModifiedHeightMap(computeModHeightMap(heightMap));
+		result.setModifiedHeightMap(normalizeAboveSeaLevel(heightMap, heightMap));
 
 		waterSourceDistMap = computeApproxDistToWaterSource(heightMap, result.getRiverMap());
 		result.setApproxDistToWaterMap(waterSourceDistMap);
@@ -212,57 +213,29 @@ public class HydrosphereGenerator {
 	}
 
 	/*
-		Computes a modified heightmap that normalizes each point based only
-		on values above the seaLevel. Those at or below it are set to zero in
-		the final map.
+		Produces a map that approxmates each point's distance to water. We do so by treating the
+		world as a collection of cells. That is, we divide the world into a series of N x N cells.
+		For each cell, we compute the average water point. Within each cell, we sum up the x and y
+		components of every point that is water (ocean or river, that is), and divide by that amount.
+
+		Then, for every point in the world, we find the closest of these water points. The distance to
+		this point is the value stored in our resulting map.
+
+		Finally, we do a special form of normalizing. We normalize every point based only on those that
+		are actually land. That way, we don't allow oceans and rivers to skew our data.
 
 		ARGUMENTS:
-			heightmap - the original heightmap of the planet.
+			heightmap - To tell us what points are oceanic.
+			rivermap - To tell us what points are apart of rivers.
 
 		RETURNS:
-			A heightmap that is normalized based on data points above seaLevel.
+			null if the heightmap or rivermap are null, or a planet map that gives us the
+			approximate distance to water.
 	*/
-	private PlanetMap computeModHeightMap(PlanetMap heightmap) {
-		PlanetMap result = new PlanetMap(this.width, this.height);
-
-		float min = -1, max = -1;
-		int len = this.width * this.height;
-		float val;
-		boolean bSet = false;
-
-		for(int i = 0; i < len; ++i) {
-			val = heightmap.getData(i);
-
-			if(val < this.seaLevel)
-				continue;
-
-			if(bSet == false) {
-				min = val;
-				max = val;
-				bSet = true;
-			}
-
-			else {
-				if(val < min)
-					min = val;
-				if(val > max)
-					max = val;
-			}
-		}
-
-		for(int i = 0; i < len; ++i) {
-			val = heightmap.getData(i);
-
-			if(min == max || val < 0.37f)
-				result.setData(i, 0);
-			else
-				result.setData(i, (val - min) / (max - min));
-		}
-
-		return result;
-	}
-
 	private PlanetMap computeApproxDistToWaterSource(PlanetMap heightmap, PlanetMap riverMap) {
+		if(heightmap == null || riverMap == null)
+			return null;
+
 		// The size of the cells that we divide the world, in pixels.
 		int CELL_SIZE = 20;
 		// The number of cells in each row of cells.
@@ -358,10 +331,10 @@ public class HydrosphereGenerator {
 			}
 		}
 
-		result.normalize();
+		result = normalizeAboveSeaLevel(heightmap, result);
 
 		for(int i = 0; i < this.width * this.height; ++i) {
-			if(heightmap.getData(i) <= 0.37f)
+			if(heightmap.getData(i) <= this.seaLevel)
 				result.setData(i, 0.0f);
 			else
 				result.setData(i, -result.getData(i) + 1.0f);
@@ -380,5 +353,64 @@ public class HydrosphereGenerator {
 		yDiff *= yDiff;
 
 		return Math.sqrt(xDiff + yDiff);
+	}
+
+	/*
+		Performs a varation of normalization where a given map toNorm is normalized
+		only based on points that are above sea level. Oceanic points are set to 0
+		by default.
+
+		ARGUMENTS:
+			heightmap - the original heightmap of the planet.
+			toNorm - the map we wish to get a specialized normal form of.
+
+		RETURNS:
+			A normalized form of toNorm, or null, if heightmap or toNorm
+			are null.
+	*/
+	private PlanetMap normalizeAboveSeaLevel(PlanetMap heightmap, PlanetMap toNorm) {
+		if(heightmap == null || toNorm == null)
+			return null;
+
+		PlanetMap result = new PlanetMap(this.width, this.height);
+
+		float min = -1, max = -1;
+		int len = this.width * this.height;
+		float heightVal;
+		float val;
+		boolean bSet = false;
+
+		for(int i = 0; i < len; ++i) {
+			heightVal = heightmap.getData(i);
+			val = toNorm.getData(i);
+
+			if(heightVal < this.seaLevel)
+				continue;
+
+			if(bSet == false) {
+				min = val;
+				max = val;
+				bSet = true;
+			}
+
+			else {
+				if(val < min)
+					min = val;
+				if(val > max)
+					max = val;
+			}
+		}
+
+		for(int i = 0; i < len; ++i) {
+			heightVal = heightmap.getData(i);
+			val = toNorm.getData(i);
+
+			if(min == max || heightVal < this.seaLevel)
+				result.setData(i, 0);
+			else
+				result.setData(i, (val - min) / (max - min));
+		}
+
+		return result;
 	}
 }

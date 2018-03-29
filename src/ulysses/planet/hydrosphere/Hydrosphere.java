@@ -226,7 +226,8 @@ public class Hydrosphere {
 		maps[2] = this.modifiedHeightMap;
 		maps[3] = this.approxWaterDist;
 
-		maps[1].scaleBy(0.5f);
+		maps[1].scaleBy(0.75f);
+		maps[2].scaleBy(0.1f);
 		maps[3].scaleBy(0.5f);
 
 		precip = this.cloudFreqMap.combineWith(maps);
