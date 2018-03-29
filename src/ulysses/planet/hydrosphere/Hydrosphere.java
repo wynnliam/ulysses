@@ -18,6 +18,9 @@
 	the further you are from the equator, the drier the point
 	becomes.
 
+	Next, we include a map that describe's each points approximate
+	distance to water sources.
+
 	Finally, we combine this with our cloud map to produce a
 	final precipitation map.
 */
@@ -221,10 +224,10 @@ public class Hydrosphere {
 		PlanetMap[] maps = new PlanetMap[4];
 		PlanetMap precip;
 
-		maps[0] = this.equatorMap;
-		maps[1] = getRiverMap();
-		maps[2] = this.modifiedHeightMap;
-		maps[3] = this.approxWaterDist;
+		maps[0] = this.equatorMap.getCopy();
+		maps[1] = getRiverMap().getCopy();
+		maps[2] = this.modifiedHeightMap.getCopy();
+		maps[3] = this.approxWaterDist.getCopy();
 
 		maps[1].scaleBy(0.75f);
 		maps[2].scaleBy(0.1f);

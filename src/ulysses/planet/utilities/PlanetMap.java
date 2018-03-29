@@ -108,6 +108,18 @@ public class PlanetMap
 		setData(y * this.width + x, val);
 	}
 
+	public PlanetMap getCopy() {
+		if(data == null)
+			return null;
+
+		PlanetMap p = new PlanetMap(this.width, this.height);
+
+		for(int i = 0; i < this.data.length; ++i)
+			p.data[i] = this.data[i];
+
+		return p;
+	}
+
 	/*
 		Normalizes the data in this map. It does so by scanning the
 		list to find the maximum and minimum values of the map. Next

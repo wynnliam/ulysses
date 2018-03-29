@@ -12,13 +12,11 @@ import java.awt.Point;
 // The data structure we use to represent a river.
 import java.util.ArrayList;
 
-public class River
-{
+public class River {
 	// Stores the points in our river.
 	private ArrayList<Point> points;
 
-	public River()
-	{
+	public River() {
 		this.points = new ArrayList<>();
 	}
 
@@ -33,8 +31,7 @@ public class River
 			false - toAdd was null, or it was already apart
 			of the river.
 	*/
-	public boolean insertPoint(Point toAdd)
-	{
+	public boolean insertPoint(Point toAdd) {
 		if(toAdd == null || containsPoint(toAdd))
 			return false;
 
@@ -51,8 +48,7 @@ public class River
 			true - the point was removed from the river.
 			false - the point was not apart of the river, or was null.
 	*/
-	public boolean removePoint(Point toRem)
-	{
+	public boolean removePoint(Point toRem) {
 		if(toRem == null)
 			return false;
 
@@ -70,8 +66,7 @@ public class River
 			false - toFind is not apart of this river, or
 			toFind is null.
 	*/
-	public boolean containsPoint(Point toFind)
-	{
+	public boolean containsPoint(Point toFind) {
 		if(toFind == null)
 			return false;
 
@@ -81,8 +76,7 @@ public class River
 	/*
 		Returns if the river has points or not.
 	*/
-	public boolean isEmpty()
-	{
+	public boolean isEmpty() {
 		return this.points.isEmpty();
 	}
 }
