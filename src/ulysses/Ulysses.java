@@ -26,24 +26,19 @@ import javax.imageio.ImageIO;
 
 import java.awt.Point;
 
-class Ulysses
-{
-	public static void main(String[] args)
-	{
+class Ulysses {
+	public static void main(String[] args) {
 		UlyssesRunnable ulyssesDriver = new UlyssesRunnable();
 		SwingUtilities.invokeLater(ulyssesDriver);
 	}
 }
 
-class UlyssesRunnable implements Runnable
-{
-	public void run()
-	{
+class UlyssesRunnable implements Runnable {
+	public void run() {
 		createGUI();
 	}
 
-	private void createGUI()
-	{
+	private void createGUI() {
 		// Creates the window.
 		JFrame frame = new JFrame("Ulysses");
 		frame.setSize(800, 512);
@@ -136,18 +131,15 @@ class UlyssesRunnable implements Runnable
 
 		BufferedImage colorMap;
 
-		try
-		{
+		try {
 			colorMap = ImageIO.read(new File("./content/heightcolormap.png"));
 		}
 
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			colorMap = null;
 		}
 
-		if(colorMap == null)
-		{
+		if(colorMap == null) {
 			System.out.println("Failed to load image");
 			return;
 		}
@@ -157,17 +149,8 @@ class UlyssesRunnable implements Runnable
 		BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 		Color c;
 
-		/*PerlinMapGenerator mapGen = new PerlinMapGenerator(rooseBolton);
-		mapGen.setOctaveCount(16);
-		mapGen.setPersistence(0.75f);
-		mapGen.setWidth(w);
-		mapGen.setHeight(h);
-		PlanetMap examplePerlin = mapGen.generateMap();*/
-
-		for(int x = 0; x < w; ++x)
-		{
-			for(int y = 0; y < h; ++y)
-			{
+		for(int x = 0; x < w; ++x) {
+			for(int y = 0; y < h; ++y) {
 				chan = (int)(255.0f * precip.getData(x, y));
 				image.setRGB(x, y, new Color(chan, chan, chan).getRGB());
 
@@ -189,33 +172,27 @@ class UlyssesRunnable implements Runnable
 	}
 }
 
-class UlyssesGraphicsPanel extends JPanel
-{
+class UlyssesGraphicsPanel extends JPanel {
 	// The image that we will render.
 	private Image image;
 
-	public UlyssesGraphicsPanel()
-	{
+	public UlyssesGraphicsPanel() {
 		this.image = null;
 	}
 
-	public Image getImage()
-	{
+	public Image getImage() {
 		return this.image;
 	}
 
-	public void setImage(Image image)
-	{
+	public void setImage(Image image) {
 		this.image = image;
 	}
 
-	public Dimension getPreferredSize()
-	{
+	public Dimension getPreferredSize() {
 		return new Dimension(1024, 512);
 	}
 
-	public void paintComponent(Graphics g)
-	{
+	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
 		System.out.println("Redraw!");
