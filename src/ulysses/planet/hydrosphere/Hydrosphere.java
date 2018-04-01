@@ -222,18 +222,20 @@ public class Hydrosphere {
 		//return this.approxWaterDist;
 
 		PlanetMap[] maps = new PlanetMap[3];
+		// So we can scale the cloud map.
+		PlanetMap cloud = this.cloudFreqMap.getCopy();
 		PlanetMap precip;
 
-		//maps[0] = this.equatorMap.getCopy();
-		maps[0] = getRiverMap().getCopy();
-		maps[1] = this.modifiedHeightMap.getCopy();
+		maps[0] = this.equatorMap.getCopy();
+		maps[1] = getRiverMap().getCopy();
 		maps[2] = this.approxWaterDist.getCopy();
 
+		cloud.scaleBy(1.1f);
 		maps[0].scaleBy(0.75f);
-		maps[1].scaleBy(0.1f);
-		maps[2].scaleBy(0.1f);
+		maps[1].scaleBy(0.75f);
+		maps[2].scaleBy(0.2f);
 
-		precip = this.cloudFreqMap.combineWith(maps);
+		precip = cloud.combineWith(maps);
 		precip.sqrt();
 		precip.blurr(5);
 		precip.normalize();

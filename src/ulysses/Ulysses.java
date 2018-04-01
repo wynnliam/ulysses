@@ -103,7 +103,7 @@ class UlyssesRunnable implements Runnable {
 		EquatorMapGenerator lat;
 
 		clouds = new PerlinMapGenerator(rooseBolton);
-		clouds.setOctaveCount(16);
+		clouds.setOctaveCount(8);
 		clouds.setPersistence(0.75f);
 
 		riverSourceMod = new PerlinMapGenerator(rooseBolton);
