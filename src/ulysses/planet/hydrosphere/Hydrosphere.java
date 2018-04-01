@@ -221,20 +221,20 @@ public class Hydrosphere {
 	public PlanetMap getPrecipitationMap() {
 		//return this.approxWaterDist;
 
-		PlanetMap[] maps = new PlanetMap[5];
+		PlanetMap[] maps = new PlanetMap[3];
 		PlanetMap precip;
 
-		maps[0] = this.equatorMap.getCopy();
-		maps[1] = getRiverMap().getCopy();
-		maps[2] = this.modifiedHeightMap.getCopy();
-		maps[3] = this.approxWaterDist.getCopy();
-		maps[4] = this.cloudFreqMap.getCopy();
+		//maps[0] = this.equatorMap.getCopy();
+		maps[0] = getRiverMap().getCopy();
+		maps[1] = this.modifiedHeightMap.getCopy();
+		maps[2] = this.approxWaterDist.getCopy();
 
-		maps[1].scaleBy(0.75f);
+		maps[0].scaleBy(0.75f);
+		maps[1].scaleBy(0.1f);
 		maps[2].scaleBy(0.1f);
-		maps[3].scaleBy(0.5f);
 
 		precip = this.cloudFreqMap.combineWith(maps);
+		precip.sqrt();
 		precip.blurr(5);
 		precip.normalize();
 
