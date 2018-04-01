@@ -204,7 +204,6 @@ public class HydrosphereGenerator {
 
 		result.setCloudFreqMap(cloudFreqMap);
 		result.setEquatorMap(equatorDistMap);
-		result.setModifiedHeightMap(normalizeAboveSeaLevel(heightMap, heightMap));
 
 		waterSourceDistMap = computeApproxDistToWaterSource(heightMap, result.getRiverMap());
 		result.setApproxDistToWaterMap(waterSourceDistMap);
