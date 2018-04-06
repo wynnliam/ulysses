@@ -44,6 +44,12 @@ public class Hydrosphere {
 	// Stores the approximate distance to water for each point.
 	private PlanetMap approxWaterDist;
 
+	// Allows us to normalize the final precipitation map according
+	// to terrain that is above sea level.
+	private PlanetMap heightMap;
+	// Allows us to determine points that are above sea level.
+	private float seaLevel;
+
 	// Stores the rivers of the world.
 	private River[] rivers;
 
@@ -54,6 +60,10 @@ public class Hydrosphere {
 		this.cloudFreqMap = null;
 		this.equatorMap = null;
 		this.approxWaterDist = null;
+
+		this.heightMap = null;
+		this.seaLevel = 0.0f;
+
 		this.rivers = null;
 	}
 
@@ -101,6 +111,22 @@ public class Hydrosphere {
 
 	public void setApproxDistToWaterMap(PlanetMap val) {
 		this.approxWaterDist = val;
+	}
+
+	public PlanetMap getHeightMap() {
+		return this.heightMap;
+	}
+
+	public void setHeightMap(PlanetMap val) {
+		this.heightMap = val;
+	}
+
+	public float getSeaLevel() {
+		return this.seaLevel;
+	}
+
+	public void setSeaLevel(float val) {
+		this.seaLevel = val;
 	}
 
 	public int getNumRivers() {
@@ -209,25 +235,89 @@ public class Hydrosphere {
 	public PlanetMap getPrecipitationMap() {
 		//return this.approxWaterDist;
 
-		PlanetMap[] maps = new PlanetMap[3];
+		PlanetMap[] maps = new PlanetMap[2];
 		// So we can scale the cloud map.
 		PlanetMap cloud = this.cloudFreqMap.getCopy();
 		PlanetMap precip;
+		float[] precipLandSizes;
 
-		maps[0] = this.equatorMap.getCopy();
-		maps[1] = getRiverMap().getCopy();
-		maps[2] = this.approxWaterDist.getCopy();
+		//maps[0] = this.equatorMap.getCopy();
+		maps[0] = getRiverMap().getCopy();
+		maps[1] = this.approxWaterDist.getCopy();
 
-		cloud.scaleBy(1.1f);
+		/*cloud.scaleBy(1.1f);
 		maps[0].scaleBy(0.65f);
 		maps[1].scaleBy(0.75f);
-		maps[2].scaleBy(0.2f);
+		maps[2].scaleBy(0.2f);*/
 
 		precip = cloud.combineWith(maps);
 		precip.sqrt();
 		precip.blurr(5);
-		precip.normalize();
+
+		precipLandSizes = getMinMaxLandVals(precip);
+		normalizeByLandPrecips(precipLandSizes, precip);
 
 		return precip;
+	}
+
+	/*
+		Determines the maximum and minimum precipitation values for all
+		precipitation values that are corresponding to land (height values
+		above sea level).
+
+		ARGUMENTS:
+			precipitation - access the precipitation map.
+
+		RETURNS:
+			a 2 dimensional vector where the first entry is the minimum precipitation
+			value on land, and the second is the maximum precipitation on land.
+	*/
+	private float[] getMinMaxLandVals(PlanetMap precipitation) {
+		// What we will return.
+		float[] result = new float[2];
+		// Use this for comparisons.
+		float currH, currP;
+		// Used to make iteration cleaner.
+		int len = this.width * this.height;
+
+		// Garantees these will be set.
+		result[0] = precipitation.getMaxVal();
+		result[1] = precipitation.getMinVal();
+
+		for(int i = 0; i < len; ++i) {
+			currH = this.heightMap.getData(i);
+			currP = precipitation.getData(i);
+			if(currH > this.seaLevel) {
+				if(currP < result[0])
+					result[0] = currP;
+				if(currP > result[1])
+					result[1] = currP;
+			}
+		}
+
+		return result;
+	}
+
+	/*
+		Normalizes every point according to the max and min precipitation values found on land.
+		Oceanic points are given the value of the cloud frequency map so as to simulate rainfall in
+		oceanic regions.
+
+		ARGUMENTS:
+			landPrecips - stores the min and max precipitation values of land points.
+			precipition - the map to modify.
+	*/
+	private void normalizeByLandPrecips(float[] landPrecips, PlanetMap precipitation) {
+		float curr;
+		int len = this.width * this.height;
+
+		for(int i = 0; i < len; ++i) {
+			if(this.heightMap.getData(i) > this.seaLevel)
+				curr = (precipitation.getData(i) - landPrecips[0]) / (landPrecips[1] - landPrecips[0]);
+			else
+				curr = 0;
+
+			precipitation.setData(i, curr);
+		}
 	}
 }
