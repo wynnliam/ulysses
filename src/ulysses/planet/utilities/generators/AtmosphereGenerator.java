@@ -9,6 +9,7 @@
 package ulysses.planet.utilities.generators;
 
 import java.util.Random;
+import ulysses.planet.Atmosphere;
 import ulysses.planet.utilities.PlanetMap;
 
 public class AtmosphereGenerator {
@@ -91,5 +92,26 @@ public class AtmosphereGenerator {
 
 	public void setSeaLevel(float val) {
 		this.seaLevel = val;
+	}
+
+	public Atmosphere generateAtmosphere() {
+		Atmosphere result = new Atmosphere(this.width, this.height);
+
+		// Set the properties of the generators.
+		this.equatorMapGenerator.setWidth(this.width);
+		this.equatorMapGenerator.setHeight(this.height);
+
+		this.windMapGenerator.setWidth(this.width);
+		this.windMapGenerator.setHeight(this.height);
+
+		// Set properties of atmosphere.
+		result.setWidth(this.width);
+		result.setHeight(this.height);
+		result.setEquatorMap(this.equatorMapGenerator.generateMap());
+		result.setWindMap(this.windMapGenerator.generateMap());
+		result.setHeightMap(this.heightMap);
+		result.setSeaLevel(this.seaLevel);
+
+		return result;
 	}
 }

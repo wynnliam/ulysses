@@ -107,4 +107,17 @@ public class Atmosphere {
 	public void setSeaLevel(float val) {
 		this.seaLevel = val;
 	}
+
+	public PlanetMap getTemperatureMap() {
+		PlanetMap result;
+		PlanetMap[] maps = new PlanetMap[1];
+
+		maps[0] = this.windMap;
+
+		result = equatorMap.combineWith(maps);
+		result.sqrt();
+		result.normalize();
+
+		return result;
+	}
 }

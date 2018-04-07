@@ -130,6 +130,33 @@ class UlyssesRunnable implements Runnable {
 		PlanetMap precip = hydro.getPrecipitationMap();
 		PlanetMap riverMap = hydro.getRiverMap();
 
+		/* ATMOSPHERE */
+		AtmosphereGenerator ag = new AtmosphereGenerator(rooseBolton);
+		// Generators for ag.
+		EquatorMapGenerator eqg;
+		PerlinMapGenerator wg;
+
+		eqg = new EquatorMapGenerator(rooseBolton);
+		// Have to set this otherwise we base equator off of default width
+		// and height.
+		eqg.setWidth(w);
+		eqg.setHeight(h);
+		eqg.setEquator(h / 2);
+
+		wg = new PerlinMapGenerator(rooseBolton);
+		wg.setOctaveCount(8);
+		wg.setPersistence(0.5f);
+
+		ag.setWidth(w);
+		ag.setHeight(h);
+		ag.setHeightMap(height);
+		ag.setSeaLevel(0.37f);
+		ag.setEquatorMapGenerator(eqg);
+		ag.setWindMapGenerator(wg);
+
+		Atmosphere atmos = ag.generateAtmosphere();
+		PlanetMap temperature = atmos.getTemperatureMap();
+
 		BufferedImage colorMap;
 
 		try {
@@ -152,11 +179,11 @@ class UlyssesRunnable implements Runnable {
 
 		for(int x = 0; x < w; ++x) {
 			for(int y = 0; y < h; ++y) {
-				chan = (int)(255.0f * precip.getData(x, y));
+				chan = (int)(255.0f * temperature.getData(x, y));
 
-				if(height.getData(x, y) <= 0.37f)
+				/*if(height.getData(x, y) <= 0.37f)
 					image.setRGB(x, y, Color.BLUE.getRGB());
-				else
+				else*/
 					image.setRGB(x, y, new Color(chan, chan, chan).getRGB());
 
 				/*if(height.getData(x, y) >= 0.63f)
