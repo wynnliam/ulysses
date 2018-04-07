@@ -96,6 +96,7 @@ class UlyssesRunnable implements Runnable {
 		PlanetMap height = litho.getHeightMap(0.63f, 0.37f);
 
 		/* HYDROSPHERE */
+		// TODO: Give the system rooseBolton for shuffling.
 		HydrosphereGenerator hg = new HydrosphereGenerator("Squanto".hashCode());
 		// Generators for hg;
 		PerlinMapGenerator clouds;
