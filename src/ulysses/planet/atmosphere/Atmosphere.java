@@ -32,6 +32,11 @@ public class Atmosphere {
 	// Dimensions of the world.
 	private int width, height;
 
+	// Represents distance from the equator.
+	private PlanetMap equatorMap;
+	// A smooth noise map to represent how wind affects temperature.
+	private PlanetMap windMap;
+
 	// higher altitudes (starting with sea level) yield cooler
 	// temperatures.
 	private PlanetMap heightMap;
@@ -41,6 +46,9 @@ public class Atmosphere {
 	public Atmosphere(int width, int height) {
 		setWidth(width);
 		setHeight(height);
+
+		this.equatorMap = null;
+		this.windMap = null;
 
 		this.heightMap = null;
 		this.seaLevel = 0;
@@ -66,5 +74,37 @@ public class Atmosphere {
 			val = 128;
 
 		this.height = val;
+	}
+
+	public PlanetMap getEquatorMap() {
+		return this.equatorMap;
+	}
+
+	public void setEquatorMap(PlanetMap val) {
+		this.equatorMap = val;
+	}
+
+	public PlanetMap getWindMap() {
+		return this.windMap;
+	}
+
+	public void setWindMap(PlanetMap val) {
+		this.windMap = val;
+	}
+
+	public PlanetMap getHeightMap() {
+		return this.heightMap;
+	}
+
+	public void setHeightMap(PlanetMap val) {
+		this.heightMap = val;
+	}
+
+	public float getSeaLevel() {
+		return this.seaLevel;
+	}
+
+	public void setSeaLevel(float val) {
+		this.seaLevel = val;
 	}
 }
