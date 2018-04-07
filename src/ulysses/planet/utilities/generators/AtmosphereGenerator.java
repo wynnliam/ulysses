@@ -38,4 +38,58 @@ public class AtmosphereGenerator {
 		this.heightMap = null;
 		this.seaLevel = 0.0f;
 	}
+
+	public int getWidth() {
+		return this.width;
+	}
+
+	public void setWidth(int val) {
+		if(val <= 0)
+			val = 256;
+
+		this.width = val;
+	}
+
+	public int getHeight() {
+		return this.height;
+	}
+
+	public void setHeight(int val) {
+		if(val <= 0)
+			val = 128;
+
+		this.height = val;
+	}
+
+	public MapGenerator getEquatorMapGenerator() {
+		return this.equatorMapGenerator;
+	}
+
+	public void setEquatorMapGenerator(MapGenerator val) {
+		this.equatorMapGenerator = val;
+	}
+
+	public MapGenerator getWindMapGenerator() {
+		return this.windMapGenerator;
+	}
+
+	public void setWindMapGenerator(MapGenerator val) {
+		this.windMapGenerator = val;
+	}
+
+	public PlanetMap getHeightMap() {
+		return this.heightMap;
+	}
+
+	public void setHeightMap(PlanetMap val) {
+		this.heightMap = val;
+	}
+
+	public float getSeaLevel() {
+		return this.seaLevel;
+	}
+
+	public void setSeaLevel(float val) {
+		this.seaLevel = val;
+	}
 }
