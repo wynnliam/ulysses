@@ -110,14 +110,93 @@ public class Atmosphere {
 
 	public PlanetMap getTemperatureMap() {
 		PlanetMap result;
-		PlanetMap[] maps = new PlanetMap[1];
+		PlanetMap[] maps = new PlanetMap[2];
+		float[] tempBounds;
 
 		maps[0] = this.windMap;
+		maps[1] = this.heightMap.getCopy();
+
+		invertHeightMap(maps[1]);
 
 		result = equatorMap.combineWith(maps);
 		result.sqrt();
-		result.normalize();
+
+		tempBounds = getMinMaxLandVals(result);
+		normalizeByLandPrecips(tempBounds, result);
 
 		return result;
+	}
+
+	private void invertHeightMap(PlanetMap heightMap) {
+		float max = heightMap.getMaxVal();
+		float val;
+
+		for(int x = 0; x < this.width; ++x) {
+			for(int y = 0; y < this.height; ++y) {
+				val = -heightMap.getData(x, y) + max;
+				heightMap.setData(x, y, val);
+			}
+		}
+	}
+
+	/*
+		Determines the maximum and minimum precipitation values for all
+		precipitation values that are corresponding to land (height values
+		above sea level).
+
+		ARGUMENTS:
+			precipitation - access the precipitation map.
+
+		RETURNS:
+			a 2 dimensional vector where the first entry is the minimum precipitation
+			value on land, and the second is the maximum precipitation on land.
+	*/
+	private float[] getMinMaxLandVals(PlanetMap precipitation) {
+		// What we will return.
+		float[] result = new float[2];
+		// Use this for comparisons.
+		float currH, currP;
+		// Used to make iteration cleaner.
+		int len = this.width * this.height;
+
+		// Garantees these will be set.
+		result[0] = precipitation.getMaxVal();
+		result[1] = precipitation.getMinVal();
+
+		for(int i = 0; i < len; ++i) {
+			currH = this.heightMap.getData(i);
+			currP = precipitation.getData(i);
+			if(currH > this.seaLevel) {
+				if(currP < result[0])
+					result[0] = currP;
+				if(currP > result[1])
+					result[1] = currP;
+			}
+		}
+
+		return result;
+	}
+
+	/*
+		Normalizes every point according to the max and min precipitation values found on land.
+		Oceanic points are given the value of the cloud frequency map so as to simulate rainfall in
+		oceanic regions.
+
+		ARGUMENTS:
+			landPrecips - stores the min and max precipitation values of land points.
+			precipition - the map to modify.
+	*/
+	private void normalizeByLandPrecips(float[] landPrecips, PlanetMap precipitation) {
+		float curr;
+		int len = this.width * this.height;
+
+		for(int i = 0; i < len; ++i) {
+			if(this.heightMap.getData(i) > this.seaLevel)
+				curr = (precipitation.getData(i) - landPrecips[0]) / (landPrecips[1] - landPrecips[0]);
+			else
+				curr = 0;
+
+			precipitation.setData(i, curr);
+		}
 	}
 }

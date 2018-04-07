@@ -181,9 +181,9 @@ class UlyssesRunnable implements Runnable {
 			for(int y = 0; y < h; ++y) {
 				chan = (int)(255.0f * temperature.getData(x, y));
 
-				/*if(height.getData(x, y) <= 0.37f)
+				if(height.getData(x, y) <= 0.37f)
 					image.setRGB(x, y, Color.BLUE.getRGB());
-				else*/
+				else
 					image.setRGB(x, y, new Color(chan, chan, chan).getRGB());
 
 				/*if(height.getData(x, y) >= 0.63f)
