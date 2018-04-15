@@ -2,28 +2,6 @@
 
 /*
 	TODO: Finish documentation!
-
-	//A value from 0 degrees celsius to 48 degrees celsius.
-	double biotemp;
-	//The value that represents the precipitation. This is
-	//from 62.5 to 22629.12
-	double precip;
-	//A large value from 0 to about 4000
-	double altitude;
-	//A number bounded from 0 to 48 degrees celsius.
-	double seaLevelBio;
-	//The potential evapotranspiration.
-	double pet;
-	//Tells us what latitudal behavior this climate would have.
-	//Note that this is NOT indicitive of the latitude itself.
-	int latitudeBelt;
-	//Tells us the altitudinal belt behavior this climate would
-	//have. Note that this is NOT indicitive of the altitude itself.
-	int altitudeBelt;
-	//The humidity province.
-	int humidityProvince;
-	//The lifezone this climate is apart of.
-	int lifezone;
 */
 
 package ulysses.planet;
@@ -98,5 +76,56 @@ public class HoldridgeData {
 			val = 0;
 
 		this.altitude = val;
+	}
+
+	public double getSeaLevelBiotemperature() {
+		return this.seaLevelBiotemp;
+	}
+
+	public void setSeaLevelBiotemperature(double val) {
+		if(val < 0 || val > 48)
+			val = 0;
+
+		this.seaLevelBiotemp = val;
+	}
+
+	public double getPotentialEvapotranspiration() {
+		return this.pet;
+	}
+
+	public void setPotentialEvapotranspiration(double val) {
+		this.pet = val;
+	}
+
+	public int getLatitudeBelt() {
+		return this.latitudeBelt;
+	}
+
+	public void setLatitudeBelt(int val) {
+		this.latitudeBelt = val;
+	}
+
+	public int getAltitudeBelt() {
+		return this.altitudeBelt;
+	}
+
+	public void setAltitudeBelt(int val) {
+		this.altitudeBelt = val;
+	}
+
+	public int getHumidityProvince() {
+		return this.humidityProvince;
+	}
+
+	public void setHumidityProvince(int val) {
+		this.humidityProvince = val;
+	}
+
+	public int getLifezone() {
+		return this.lifezone;
+	}
+
+	public void setLifezone(int val) {
+		this.lifezone = val;
 	}
 }
