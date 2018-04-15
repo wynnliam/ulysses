@@ -12,9 +12,14 @@ public class Biosphere {
 	// The dimensions of the world.
 	private int width, height;
 
+	// Stores the biome data of each point.
+	private HoldridgeData[] biomeData;
+
 	public Biosphere(int width, int height) {
 		setWidth(width);
 		setHeight(height);
+
+		this.biomeData = null;
 	}
 
 	public int getWidth() {
@@ -37,5 +42,13 @@ public class Biosphere {
 			val = 128;
 
 		this.height = val;
+	}
+
+	public HoldridgeData[] getBiomeData() {
+		return this.biomeData;
+	}
+
+	public void setBiomeData(HoldridgeData[] val) {
+		this.biomeData = val;
 	}
 }
