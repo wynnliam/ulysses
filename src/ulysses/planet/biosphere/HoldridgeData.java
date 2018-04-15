@@ -66,4 +66,37 @@ public class HoldridgeData {
 
 		this.lifezone = 0;
 	}
+
+	public double getBiotemperature() {
+		return this.biotemp;
+	}
+
+	public void setBiotemperature(double val) {
+		if(val < 0.0 || val > 48.0)
+			val = 0.0;
+
+		this.biotemp = val;
+	}
+
+	public double getPrecipitation() {
+		return this.precip;
+	}
+
+	public void setPrecipitation(double val) {
+		if(val < 62.5 || val > 22629.12)
+			val = 62.5;
+
+		this.precip = val;
+	}
+
+	public double getAltitude() {
+		return this.altitude;
+	}
+
+	public void setAltitude(double val) {
+		if(val < 0 || val > 4000)
+			val = 0;
+
+		this.altitude = val;
+	}
 }
