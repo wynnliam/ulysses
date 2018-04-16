@@ -6,6 +6,7 @@
 
 package ulysses.planet.utilities.generators;
 
+import ulysses.planet.Biosphere;
 import ulysses.planet.utilities.PlanetMap;
 
 public class BiosphereGenerator {
@@ -68,5 +69,15 @@ public class BiosphereGenerator {
 
 	public void setPrecipitationMap(PlanetMap val) {
 		this.precipMap = val;
+	}
+
+	/*
+		Generates a biosphere by using the Holdridge Climate model.
+		The classification system requires temperature, precipitation, and
+		altitude data. The data is given as normalized values from 0 to 1.
+		See the HoldridgeSystem class for more information on how this is done.
+	*/
+	public Biosphere generateMap() {
+		return null;
 	}
 }
