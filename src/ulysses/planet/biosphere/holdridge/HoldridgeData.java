@@ -1,7 +1,10 @@
 // Liam Wynn, 4/14/2018, Ulysses
 
 /*
-	TODO: Finish documentation!
+	Stores all Holdridge climate data for a given point.
+	Please see HoldridgeSystem for explanation of all components.
+
+	TODO: Make belts, humidity, lifezone members of enumerators.
 */
 
 package ulysses.planet.holdridge;
