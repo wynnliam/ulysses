@@ -4,7 +4,7 @@
 	TODO: Finish documentation!
 */
 
-package ulysses.planet;
+package ulysses.planet.holdridge;
 
 public class HoldridgeData {
 	// A value from 0 degrees celsius to 48 degrees celsius.

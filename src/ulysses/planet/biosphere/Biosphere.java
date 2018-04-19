@@ -8,6 +8,8 @@
 
 package ulysses.planet;
 
+import ulysses.planet.holdridge.HoldridgeData;
+
 public class Biosphere {
 	// The dimensions of the world.
 	private int width, height;

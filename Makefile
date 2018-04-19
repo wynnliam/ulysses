@@ -3,6 +3,7 @@ SRC= ./src/ulysses/*.java\
 	 ./src/ulysses/planet/hydrosphere/*.java\
 	 ./src/ulysses/planet/atmosphere/*.java\
 	 ./src/ulysses/planet/biosphere/*.java\
+	 ./src/ulysses/planet/biosphere/holdridge/*.java\
      ./src/ulysses/planet/utilities/*.java \
 	 ./src/ulysses/planet/utilities/generators/*.java
 
