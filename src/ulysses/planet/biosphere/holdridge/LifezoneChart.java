@@ -1,13 +1,16 @@
 // Liam Wynn, 4/19/2018, Ulysses
 
 /*
- * The lifezone chart in the Holdridge System is how we classify biotemperatures
- * and precipitation values. In essence, we represent our chart as an array
- * of hexagons. When we want to find the specific life zone given a biotemp
- * and precipitation, we scan through this array and find the "closest" lifezone.
- * Since each lifezone is a hexagon, we can take the 6 points and calculate
- * the centroid of the hexagon. From there, we simply calculate the distance.
- */
+	The lifezone chart in the Holdridge System is how we classify biotemperatures
+	and precipitation values. In essence, we represent our chart as an array
+	of hexagons. When we want to find the specific life zone given a biotemp
+	and precipitation, we scan through this array and find the "closest" lifezone.
+	Since each lifezone is a hexagon, we can take the 6 points and calculate
+	the centroid of the hexagon. From there, we simply calculate the distance.
+*/
+
+package ulysses.planet.holdridge;
+
 public class LifezoneChart {
     // Tells us the number of hexagons used in the chart.
     public static final int CHART_SIZE = 30;
@@ -466,7 +469,11 @@ public class LifezoneChart {
         double currDist;
         BiotempPrecipPoint point = new BiotempPrecipPoint(biotemp, precip);
 
-		// TODO: Handle polar desert!
+		// Will force the system to recognize this as a polar desert.
+		// Any number between 0 and 29 (inclusive) is defined. Undefined
+		// values are seen as desert by default.
+		if(biotemp <= 1.5)
+			return 30;
 
         for(int i = 0; i < CHART_SIZE; ++i) {
             currDist = this.lifezones[i].getDistance(point);
@@ -493,7 +500,7 @@ public class LifezoneChart {
 			Gets a the point at a given index.
 
 			ARGUMENTS:
-				index a value from 0 to 6, since this is a hexagon.
+				index - a value from 0 to 6, since this is a hexagon.
 
 			RETURNS:
 				null if index is invalid, or the BiotempPrecipPoint at the index.
@@ -509,7 +516,7 @@ public class LifezoneChart {
 			Calculates the distance of a point from the centroid of this lifezone
 
 			ARGUMENTS:
-				point the point we want the distance from.
+				point - the point we want the distance from.
 
 			RETURNS:
 				the distance between point and the centroid of the lifezone.
@@ -549,7 +556,7 @@ public class LifezoneChart {
 			Calculates the distance between this point and another point
 
 			ARGUMENTS:
-				point: the given point.
+				point - the given point.
 
 			RETURNS:
 				the distance from this point to point.
