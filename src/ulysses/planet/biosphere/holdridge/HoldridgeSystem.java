@@ -92,15 +92,28 @@ public class HoldridgeSystem {
 	public static HoldridgeData computeData(double biotemp, double precip, double altitude) {
 		HoldridgeData result = new HoldridgeData();
 
-		double seaLevelBio;
+		double seaLevelBio, pet;
+		LatitudeBelt latitudeBelt;
+		AltitudeBelt altitudeBelt;
+		HumidityProvince humidityProvince;
 
 		result.setBiotemperature(biotemp);
 		result.setPrecipitation(precip);
 		result.setAltitude(altitude);
 
 		seaLevelBio = getSeaLevelBiotemp(biotemp, altitude);
+		pet = getPET(biotemp, precip);
+
+		latitudeBelt = getLatitudeBelt(seaLevelBio);
+		altitudeBelt = getAltitudeBelt(biotemp);
+		humidityProvince = getHumidityProvince(pet);
 
 		result.setSeaLevelBiotemperature(seaLevelBio);
+		result.setPotentialEvapotranspiration(pet);
+		result.setLatitudeBelt(latitudeBelt);
+		result.setAltitudeBelt(altitudeBelt);
+		result.setHumidityProvince(humidityProvince);
+		result.setLifezone(CHART.getLifezone(biotemp, precip));
 
 		return result;
 	}
