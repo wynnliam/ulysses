@@ -9,6 +9,8 @@
 
 package ulysses.planet.holdridge;
 
+import ulysses.planet.holdridge.HoldridgeSystem.*;
+
 public class HoldridgeData {
 	// A value from 0 degrees celsius to 48 degrees celsius.
 	private double biotemp;
@@ -24,11 +26,11 @@ public class HoldridgeData {
 	private double pet;
 
 	// The latitude behavior of this climate.
-	private int latitudeBelt;
+	private LatitudeBelt latitudeBelt;
 	// The altitude behavior of this climate.
-	private int altitudeBelt;
+	private AltitudeBelt altitudeBelt;
 	// The humidity province of this climate.
-	private int humidityProvince;
+	private HumidityProvince humidityProvince;
 
 	// The actual lifezone of this climate is apart of.
 	private int lifezone;
@@ -41,9 +43,9 @@ public class HoldridgeData {
 		this.seaLevelBiotemp = 0.0;
 		this.pet = 0.0;
 
-		this.latitudeBelt = 0;
-		this.altitudeBelt = 0;
-		this.humidityProvince = 0;
+		this.latitudeBelt = LatitudeBelt.POLAR;
+		this.altitudeBelt = AltitudeBelt.NIVAL;
+		this.humidityProvince = HumidityProvince.SATURATED;
 
 		this.lifezone = 0;
 	}
@@ -100,27 +102,27 @@ public class HoldridgeData {
 		this.pet = val;
 	}
 
-	public int getLatitudeBelt() {
+	public LatitudeBelt getLatitudeBelt() {
 		return this.latitudeBelt;
 	}
 
-	public void setLatitudeBelt(int val) {
+	public void setLatitudeBelt(LatitudeBelt val) {
 		this.latitudeBelt = val;
 	}
 
-	public int getAltitudeBelt() {
+	public AltitudeBelt getAltitudeBelt() {
 		return this.altitudeBelt;
 	}
 
-	public void setAltitudeBelt(int val) {
+	public void setAltitudeBelt(AltitudeBelt val) {
 		this.altitudeBelt = val;
 	}
 
-	public int getHumidityProvince() {
+	public HumidityProvince getHumidityProvince() {
 		return this.humidityProvince;
 	}
 
-	public void setHumidityProvince(int val) {
+	public void setHumidityProvince(HumidityProvince val) {
 		this.humidityProvince = val;
 	}
 
