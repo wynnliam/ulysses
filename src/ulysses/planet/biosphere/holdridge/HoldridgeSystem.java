@@ -76,4 +76,56 @@ public class HoldridgeSystem {
 		WOODLAND,
 		VERY_DRY_FOREST
     };
+
+	/*
+		Computes all climate data given a biotemperature, precipitation, and altitude value.
+		TODO: Finish me!
+
+		ARGUMENTS:
+			biotemp - the temperature in celsius.
+			precip - annual precipitation in milimeters
+			altitude - height of a position in meters.
+
+		RETURNS:
+			a HoldridgeData object describing a given life zone.
+	*/
+	public static HoldridgeData computeData(double biotemp, double precip, double altitude) {
+		HoldridgeData result = new HoldridgeData();
+
+		double seaLevelBio;
+
+		result.setBiotemperature(biotemp);
+		result.setPrecipitation(precip);
+		result.setAltitude(altitude);
+
+		seaLevelBio = getSeaLevelBiotemp(biotemp, altitude);
+
+		result.setSeaLevelBiotemperature(seaLevelBio);
+
+		return result;
+	}
+
+    /*
+		Calculates the sea-level biotemperature from a given biotemp and
+		precip. According to the Holdridge System, the sea level biotemp
+		is taking the regular biotemp and adding 6 degrees celsius for
+		every 1000 meters in altitude.
+
+		ARGUMENTS:
+			biotemp - a biotemp from 0 to 48 degrees celsius.
+			altitude - an altitude from 0 to 4000 meters
+
+		RETURNS:
+			a sea level biotemperature
+     */
+    public static double getSeaLevelBiotemp(double biotemp, double altitude) {
+        double result;
+        
+        result = biotemp + (6.0 * altitude / 1000);
+        
+        result = result >= 0.0 ? result : 0.0;
+        result = result <= 48.0 ? result : 48.0;
+        
+        return result;
+    }
 }
