@@ -157,6 +157,16 @@ class UlyssesRunnable implements Runnable {
 		Atmosphere atmos = ag.generateAtmosphere();
 		PlanetMap temperature = atmos.getTemperatureMap();
 
+		/* BIOSPHERE */
+		BiosphereGenerator biog = new BiosphereGenerator();
+		biog.setWidth(w);
+		biog.setHeight(h);
+		biog.setHeightMap(height);
+		biog.setTemperatureMap(temperature);
+		biog.setPrecipitationMap(precip);
+		biog.setParams(new BiosphereGeneratorParams());
+		Biosphere bios = biog.generateMap();
+
 		BufferedImage colorMap;
 
 		try {

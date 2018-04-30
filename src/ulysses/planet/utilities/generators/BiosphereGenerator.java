@@ -7,6 +7,8 @@
 package ulysses.planet.utilities.generators;
 
 import ulysses.planet.Biosphere;
+import ulysses.planet.holdridge.*;
+import ulysses.planet.holdridge.HoldridgeSystem.*;
 import ulysses.planet.utilities.PlanetMap;
 
 public class BiosphereGenerator {
@@ -98,12 +100,46 @@ public class BiosphereGenerator {
 			return null;
 
 		Biosphere result = new Biosphere(this.width, this.height);
-		HoldridgeData next;
 
-		for(int i = 0; i < this.width * this.height; ++i) {
-			// TODO: Finish me!
+		HoldridgeData next;
+		double altitude, biotemp, precip;
+
+		for(int x = 0; x < this.width; ++x) {
+			for(int y = 0; y < this.height; ++y) {
+				if(this.heightMap.getData(x, y) <= 0.37f) {
+					result.setHoldridgeData(x, y, null);
+					continue;
+				}
+
+				altitude = convertValue(this.heightMap.getData(x, y), this.params.minAltitude, this.params.maxAltitude);
+				biotemp = convertValue(this.tempMap.getData(x, y), this.params.minTemp, this.params.maxTemp);
+				precip = convertValue(this.precipMap.getData(x, y), this.params.minPrecip, this.params.maxPrecip);
+
+				next = HoldridgeSystem.computeData(biotemp, precip, altitude);
+				result.setHoldridgeData(x, y, next);
+			}
 		}
 
 		return result;
+	}
+
+	/*
+		Given a value from 0.0 to 1.0, we convert it to a corresponding
+		value on the scale of min to max. We will assume val is between 0 and 1.
+		However, if max is the same as the min, we will return min.
+
+		ARGUMENTS:
+			val - a value from 0.0 to 1.0.
+			min, max - describe the scale to convert val to.
+
+		RETURNS:
+			A value between min and max (inclusive). If min equals max, we
+			return min.
+	*/
+	private double convertValue(double val, double min, double max) {
+		if(max == min)
+			return min;
+
+		return (max - min) * val + min;
 	}
 }
