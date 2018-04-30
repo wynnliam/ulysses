@@ -60,8 +60,8 @@ class UlyssesRunnable implements Runnable {
 		gbc.gridy = 1;
 		panel.add(screen, gbc);
 
-		//long seed = System.nanoTime();
-		long seed = "Ponyri".hashCode();
+		long seed = System.nanoTime();
+		//long seed = "Ponyri".hashCode();
 		Random rooseBolton = new Random(seed);
 		int w = 512;
 		int h = 512;
@@ -101,7 +101,8 @@ class UlyssesRunnable implements Runnable {
 		// Generators for hg;
 		PerlinMapGenerator clouds;
 		PerlinMapGenerator riverSourceMod;
-		EquatorMapGenerator lat;
+		//EquatorMapGenerator lat;
+		PerlinMapGenerator lat;
 
 		clouds = new PerlinMapGenerator(rooseBolton);
 		clouds.setOctaveCount(8);
@@ -111,10 +112,15 @@ class UlyssesRunnable implements Runnable {
 		riverSourceMod.setOctaveCount(1);
 		riverSourceMod.setPersistence(0.95f);
 
-		lat = new EquatorMapGenerator(rooseBolton);
+		/*lat = new EquatorMapGenerator(rooseBolton);
 		lat.setWidth(w);
 		lat.setHeight(h);
-		lat.setEquator(h / 2);
+		lat.setEquator(h / 2);*/
+		lat = new PerlinMapGenerator(rooseBolton);
+		lat.setWidth(w);
+		lat.setHeight(h);
+		lat.setOctaveCount(4);
+		lat.setPersistence(0.75f);
 
 		hg.setWidth(w);
 		hg.setHeight(h);
@@ -167,6 +173,23 @@ class UlyssesRunnable implements Runnable {
 		biog.setParams(new BiosphereGeneratorParams());
 		Biosphere bios = biog.generateMap();
 
+		// Stores the colors for each biome type. Only looks at
+		// the lifezone, not anything else.
+		int[] lifezoneColors = new int[14];
+		lifezoneColors[0] = new Color(255, 0, 0).getRGB();
+		lifezoneColors[1] = new Color(255, 0, 128).getRGB();
+		lifezoneColors[2] = new Color(12, 0, 255).getRGB();
+		lifezoneColors[3] = new Color(0, 128, 0).getRGB();
+		lifezoneColors[4] = new Color(255, 255, 0).getRGB();
+		lifezoneColors[6] = new Color(0, 200, 128).getRGB();
+		lifezoneColors[7] = new Color(255, 128, 0).getRGB();
+		lifezoneColors[8] = new Color(150, 75, 0).getRGB();
+		lifezoneColors[9] = new Color(255, 53, 94).getRGB();
+		lifezoneColors[10] = new Color(255, 191, 0).getRGB();
+		lifezoneColors[11] = new Color(0, 127, 255).getRGB();
+		lifezoneColors[12] = new Color(176, 191, 26).getRGB();
+		lifezoneColors[13] = new Color(75, 111, 68).getRGB();
+
 		BufferedImage colorMap;
 
 		try {
@@ -196,10 +219,8 @@ class UlyssesRunnable implements Runnable {
 				else
 					image.setRGB(x, y, new Color(chan, chan, chan).getRGB());*/
 
-				if(height.getData(x, y) >= 0.63f)
-					image.setRGB(x, y, Color.WHITE.getRGB());
-				else if(height.getData(x, y) > 0.37f)
-					image.setRGB(x, y, Color.GREEN.getRGB());
+				if(height.getData(x, y) > 0.37f)
+					image.setRGB(x, y, lifezoneColors[bios.getBiomeData(x, y).getLifezone()]);
 				else
 					image.setRGB(x, y, Color.BLUE.getRGB());
 
