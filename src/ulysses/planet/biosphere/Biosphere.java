@@ -21,7 +21,7 @@ public class Biosphere {
 		setWidth(width);
 		setHeight(height);
 
-		this.biomeData = null;
+		this.biomeData = new HoldridgeData[this.width * this.height];
 	}
 
 	public int getWidth() {
@@ -46,11 +46,17 @@ public class Biosphere {
 		this.height = val;
 	}
 
-	public HoldridgeData[] getBiomeData() {
-		return this.biomeData;
+	public HoldridgeData getBiomeData(int x, int y) {
+		if(x < 0 || x >= this.width || y < 0 || y >= this.height)
+			return null;
+
+		return this.biomeData[y * this.width + x];
 	}
 
-	public void setBiomeData(HoldridgeData[] val) {
-		this.biomeData = val;
+	public void setHoldridgeData(int x, int y, HoldridgeData val) {
+		if(x < 0 || x >= this.width || y < 0 || y >= this.height)
+			return;
+
+		this.biomeData[y * this.width + x] = val;
 	}
 }

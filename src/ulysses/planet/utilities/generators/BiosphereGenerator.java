@@ -89,8 +89,21 @@ public class BiosphereGenerator {
 		The classification system requires temperature, precipitation, and
 		altitude data. The data is given as normalized values from 0 to 1.
 		See the HoldridgeSystem class for more information on how this is done.
+
+		RETURNS:
+			A biosphere, or null if the params or maps (temp, precip, height) are null.
 	*/
 	public Biosphere generateMap() {
-		return null;
+		if(this.params == null || this.tempMap == null || this.precipMap == null || this.heightMap == null)
+			return null;
+
+		Biosphere result = new Biosphere(this.width, this.height);
+		HoldridgeData next;
+
+		for(int i = 0; i < this.width * this.height; ++i) {
+			// TODO: Finish me!
+		}
+
+		return result;
 	}
 }
