@@ -16,6 +16,9 @@ public class BiosphereGenerator {
 	// Neccessary maps for computing the biosphere.
 	private PlanetMap heightMap, tempMap, precipMap;
 
+	// Stores values used to translate raw PlanetMap data to.
+	private BiosphereGeneratorParams params;
+
 	public BiosphereGenerator() {
 		this.width = 256;
 		this.height = 128;
@@ -23,6 +26,8 @@ public class BiosphereGenerator {
 		this.heightMap = null;
 		this.tempMap = null;
 		this.precipMap = null;
+
+		this.params = null;
 	}
 
 	public int getWidth() {
@@ -69,6 +74,14 @@ public class BiosphereGenerator {
 
 	public void setPrecipitationMap(PlanetMap val) {
 		this.precipMap = val;
+	}
+
+	public BiosphereGeneratorParams getParams() {
+		return this.params;
+	}
+
+	public void setParams(BiosphereGeneratorParams val) {
+		this.params = val;
 	}
 
 	/*
